@@ -3,7 +3,7 @@ import json, main, os
 
 app = Flask(__name__) #create the Flask app
 
-@app.route('/check', methods=['POST', 'GET'])
+@app.route('/check', methods=['GET'])
 def check():
     testName = '__pcap__'
     testFile = main.getPcap(testName)    
