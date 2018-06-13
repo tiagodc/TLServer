@@ -1,0 +1,15 @@
+.fileNameBox{
+    height: 30px;
+    width: 60%;
+    text-align: left;
+}
+
+.btnContainer{
+    text-align: center;
+}
+
+.btn{
+    margin: 10px;
+    height: 40px;
+    width:  40%;
+}
