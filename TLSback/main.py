@@ -29,7 +29,7 @@ cmdMaker = bashInfo()
 def checkPcap(fullFileName, erase=False):
     sz1 = os.path.getsize( fullFileName )
     
-    time.sleep(3)
+    time.sleep(2)
     sz2 = os.path.getsize( fullFileName )
 
     if(sz2 == sz1):
@@ -46,14 +46,14 @@ def getPcap(fileName):
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
-    time.sleep(3)
+    time.sleep(2)
     return checkPcap('pcaps/' + fileName + '.pcap', True)
 
 def stopPcap():
     cmd = 'kill -9 $(pidof tcpdump)'
     cmd = cmdMaker.makeCmd(cmd)
     os.system( cmd )
-    return os.getcwd()
+    return True
 
 def listPcaps():
     return os.listdir('pcaps')

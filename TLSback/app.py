@@ -1,7 +1,9 @@
 from flask import Flask, request, send_from_directory #import main Flask class and request object
 import json, main, os
+from flask_cors import CORS
 
 app = Flask(__name__) #create the Flask app
+CORS(app)
 
 @app.route('/check', methods=['GET'])
 def check():
@@ -16,9 +18,8 @@ def check():
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
-    # name = request.get_json()
-    name = 'teste'
-    hasFile = main.getPcap(name)
+    obj = request.get_json()
+    hasFile = main.getPcap(obj['name'])
     return json.dumps(hasFile)
 
 @app.route('/dir', methods=['GET'])
@@ -28,9 +29,8 @@ def dir():
 
 @app.route('/monitor', methods=['POST', 'GET'])
 def monitor():
-    # name = request.get_json()
-    name = 'teste'
-    fullName = 'pcap/' + name + '.pcap'
+    obj = request.get_json()
+    fullName = 'pcaps/' + obj['name'] + '.pcap'
     size = main.checkPcap(fullName)
     return json.dumps( size )
 
