@@ -1,9 +1,11 @@
 .fileNameBox{
-    height: 30px;
+    height: 100px;
     width: 60%;
     text-align: center;
     margin-bottom: 20px;
     margin-top: 10px;
+    font-size: 36px;
+    border: 0.5px solid black;
 }
 
 .btnContainer{
@@ -12,8 +14,9 @@
 
 .btn{
     margin: 10px;
-    height: 50px;
-    width:  40%;
+    height: 150px;
+    width:  70%;
+    font-size: 36px;
 }
 
 .testBtn{

@@ -8,11 +8,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class AppComponent {
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient){
+    let localhost = window.location.href.split(':')[1];
+    let nchar = localhost.length;
+    if(localhost[nchar-1] == '/') localhost = localhost.substring(0, nchar-1);
+  
+    this.serverAddress = 'http:' + localhost + ':5000/'
+    console.log(this.serverAddress);
+  }
   
   fileName = '';
   fileLink = "";
-  serverAddress = 'http://localhost:5000/';
+  serverAddress = '';
   counter: any;
   startNow: any;
 

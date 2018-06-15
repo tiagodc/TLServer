@@ -1,0 +1,46 @@
+<h2 style="text-align:center">
+  Data collection from VLP16
+</h2>
+
+<div class="btnContainer">
+
+  <div style="text-align:center">File name (without extension):</div>
+  <input class="fileNameBox" type="text" [(ngModel)]="fileName" [disabled]="getChecker.unsaved" />
+
+  <button class="btn testBtn" (click)="testConnection()" [disabled]="testChecker.loading || getChecker.loading">
+      <i *ngIf="testChecker.loading" class="fa fa-cog fa-spin"></i>
+      <span *ngIf="!testChecker.loading">Test System</span>
+    </button>
+  
+  <div class="msg {{testChecker.class}}">{{testChecker.msg}}</div>
+
+  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished">
+    <i *ngIf="getChecker.loading" class="fa fa-sync fa-spin"></i>
+    <span *ngIf="!getChecker.loading">Capture Data</span>
+  </button>
+
+  <div class="msg {{getChecker.class}}">{{getChecker.msg}}</div>
+
+  <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg">
+    Stop Capture
+  </button>
+
+  <br><br>
+  <div class="spacer"></div>
+  <br>
+
+  
+  <button class="btn downBtn" [disabled]="!getChecker.finished" (click)="download()">
+    <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
+    <span *ngIf="!getChecker.loading">Download file</span>
+  </button>
+
+  <br>
+  or
+  <br>
+
+  <button class="btn clearBtn" [disabled]="!getChecker.finished" (click)="clear(true)">
+    <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
+    <span *ngIf="!getChecker.loading">Clear data</span>
+  </button>
+</div>

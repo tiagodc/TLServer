@@ -1,5 +1,6 @@
 #!/bin/bash
 
-FLASK_APP=app.py
-FLASK_DEBUG=1
-flask run --reload #--host=0.0.0.0
+sleep 3
+sudo ifconfig eth0 192.168.1.70 netmask 255.255.255.0
+cd /home/pi/Desktop/TLServer/TLSback
+python3 app.py &

@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory #import main Flask class and request object
+from flask import Flask, request, send_from_directory, render_template #import main Flask class and request object
 import json, main, os
 from flask_cors import CORS
 
@@ -45,4 +45,4 @@ def download(filename):
     return send_from_directory(path, filename)
 
 if __name__ == '__main__':
-    app.run(port=5000, host='0.0.0.0', debug=True)
+    app.run(port=5000, host='0.0.0.0', debug=False)
