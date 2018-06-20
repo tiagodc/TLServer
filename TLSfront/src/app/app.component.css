@@ -28,11 +28,15 @@
 }
 
 .clearBtn{
-    background-color: rgba(255, 94, 0, 0.705)
+    background-color: rgba(255, 60, 30, 0.705)
 }
 
 .downBtn{
     background-color: rgba(255, 94, 0, 0.705)
+}
+
+.saveBtn{
+    background-color: rgba(180, 180, 0, 0.705)
 }
 
 .stopBtn{

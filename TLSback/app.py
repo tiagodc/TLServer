@@ -42,7 +42,18 @@ def kill():
 @app.route('/download/<path:filename>', methods=['GET','POST'])
 def download(filename):
     path = os.getcwd() + '/pcaps'
+    # main.flashSave(filename)
     return send_from_directory(path, filename)
 
+@app.route('/save', methods=['GET','POST'])
+def save():
+    obj = request.get_json()
+    fileName = obj['name']
+    return json.dumps( main.flashSave(fileName + '.pcap') )
+
+@app.route('/check_drive', methods=['GET'])
+def checkDrive():
+    return json.dumps( main.checkFlashDrive() )
+
 if __name__ == '__main__':
-    app.run(port=5000, host='0.0.0.0', debug=False)
+    app.run(port=5001, host='0.0.0.0', debug=True)

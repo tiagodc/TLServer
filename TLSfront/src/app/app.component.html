@@ -5,23 +5,23 @@
 <div class="btnContainer">
 
   <div style="text-align:center">File name (without extension):</div>
-  <input class="fileNameBox" type="text" [(ngModel)]="fileName" [disabled]="getChecker.unsaved" />
+  <input class="fileNameBox" type="text" [(ngModel)]="fileName" [disabled]="getChecker.unsaved || saving" />
 
-  <button class="btn testBtn" (click)="testConnection()" [disabled]="testChecker.loading || getChecker.loading">
+  <button class="btn testBtn" (click)="testConnection()" [disabled]="testChecker.loading || getChecker.loading || saving">
       <i *ngIf="testChecker.loading" class="fa fa-cog fa-spin"></i>
       <span *ngIf="!testChecker.loading">Test System</span>
     </button>
   
   <div class="msg {{testChecker.class}}">{{testChecker.msg}}</div>
 
-  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished">
+  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished || saving">
     <i *ngIf="getChecker.loading" class="fa fa-sync fa-spin"></i>
     <span *ngIf="!getChecker.loading">Capture Data</span>
   </button>
 
   <div class="msg {{getChecker.class}}">{{getChecker.msg}}</div>
 
-  <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg">
+  <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg || saving">
     Stop Capture
   </button>
 
@@ -29,18 +29,24 @@
   <div class="spacer"></div>
   <br>
 
+  <button class="btn saveBtn" [disabled]="!getChecker.finished || !driveChecker.available || saving" (click)="save()">
+    <i *ngIf="getChecker.loading || saving" class="fas fa-circle-notch fa-spin"></i>
+    <span *ngIf="!getChecker.loading && !saving">Save File</span>
+  </button>
+
+  <div class="msg {{driveChecker.class}}">{{driveChecker.msg}}</div>
   
-  <button class="btn downBtn" [disabled]="!getChecker.finished" (click)="download()">
+  <button class="btn downBtn" [disabled]="!getChecker.finished || saving" (click)="download()">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading">Download file</span>
+    <span *ngIf="!getChecker.loading">Download File</span>
   </button>
 
   <br>
   or
   <br>
 
-  <button class="btn clearBtn" [disabled]="!getChecker.finished" (click)="clear(true)">
+  <button class="btn clearBtn" [disabled]="!getChecker.finished || saving" (click)="clear(true)">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading">Clear data</span>
+    <span *ngIf="!getChecker.loading">Clear Data</span>
   </button>
 </div>

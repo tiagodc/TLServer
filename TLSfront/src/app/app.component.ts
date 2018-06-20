@@ -13,8 +13,8 @@ export class AppComponent {
     let nchar = localhost.length;
     if(localhost[nchar-1] == '/') localhost = localhost.substring(0, nchar-1);
   
-    this.serverAddress = 'http:' + localhost + ':5000/'
-    console.log(this.serverAddress);
+    this.serverAddress = 'http:' + localhost + ':5001/'
+    console.log('flask: ', this.serverAddress);
   }
   
   fileName = '';
@@ -22,6 +22,8 @@ export class AppComponent {
   serverAddress = '';
   counter: any;
   startNow: any;
+  space: any;
+  saving: boolean = false;
 
   ajaxHeader = new HttpHeaders({
     'Content-Type': 'application/json'
@@ -70,14 +72,21 @@ export class AppComponent {
       {name: this.fileName}, 
       {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
         (resp: any) => {
-          if(!!resp){
-            let fSize = parseInt(resp) / 1024 / 1024;
+          console.log('flash file: ', typeof resp);
+          if(!!resp && typeof resp === 'number'){
+            // let fSize = resp / 1024 / 1024;
             this.getChecker.msg = '0 s';
             this.getChecker.class = 'workMsg';
           
             this.startNow = Date.now();
             this.setMonitor();
-
+          
+          }else if(typeof resp === 'string'){
+            this.getChecker.msg = resp;
+            this.getChecker.class = 'failMsg';
+            this.getChecker.loading = false;
+            this.getChecker.unsaved = false;
+          
           }else{
             this.getChecker.msg = 'No data streaming, check connections.';
             this.getChecker.class = 'failMsg';
@@ -113,10 +122,24 @@ export class AppComponent {
     );
   }
 
+  save(){
+    let url = this.serverAddress + 'save';
+
+    this.saving = true;
+    this.http.post(url, 
+      {name: this.fileName}, 
+      {headers: this.ajaxHeader, responseType: 'json'}).subscribe( (back: any) => {
+        this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB free' : '';
+        this.clear();
+        this.saving = false;
+      })
+  }
+
   download(){
     // this.fileLink = this.serverAddress + 'download/' + this.fileName + '.pcap';
     window.location.href = this.fileLink;
-    this.clear();
+    if(this.driveChecker.available) this.save();
+    // this.clear();
   }
 
   clear(rename = false){
@@ -160,6 +183,34 @@ export class AppComponent {
             this.getChecker.unsaved = false;
           }
       )}, 3000)
+  }
+
+  driveChecker: any = {msg: '', class: '', available: false}
+  checkFlashDrive(){
+    let url = this.serverAddress + 'check_drive'
+    
+    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+      (data: any) => {        
+        if(data){
+          this.driveChecker.msg = data.toFixed(2) + ' GB free';
+          this.driveChecker.class = 'workMsg'
+          this.driveChecker.available = true;
+        }else{
+          this.driveChecker.msg = 'No flash drive available.';
+          this.driveChecker.class = 'failMsg';
+          this.driveChecker.available = false;
+        }
+      },
+      err => {
+        this.driveChecker.msg = 'Something went wrong, check the pi.';
+        this.driveChecker.class = 'failMsg';
+        this.driveChecker.available = false;
+      }
+    );
+  }
+
+  ngOnInit(){
+    this.checkFlashDrive();
   }
 
 }
