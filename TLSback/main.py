@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import os, sys, time
+import os, sys, time, re
 
 class bashInfo:
     sudoPass = ''
@@ -64,13 +64,21 @@ def stopPcap():
 def listPcaps():
     return os.listdir('pcaps')
 
-def checkFlashDrive():
+def getFlashPath():
     userName  = os.listdir('/media/')[0]
-    flashList = os.listdir('/media/' + userName)
-    if(len(flashList) == 0):
+    fList = os.listdir('/media/' + userName)
+    for i in fList:
+        isSys = re.match(r'settings\d*', i, re.IGNORECASE)
+        if isSys == None:
+            flashPath = '/media/' + userName + '/' + i + '/'
+            return flashPath
+    return False
+
+def checkFlashDrive():
+    disk  = getFlashPath()
+    if not disk:
         return False
     
-    disk = '/media/' + userName + '/' + flashList[0]
     disk = os.statvfs(disk)
     space = disk.f_bfree * disk.f_bsize / 1000 / 1000 / 1000
     return space
@@ -80,9 +88,7 @@ def flashSave(fullFileName, backGround = False):
     if not(check):
         return False
 
-    userName  = os.listdir('/media/')[0]
-    flashName = os.listdir('/media/' + userName)[0]
-    flashPath = '/media/' + userName + '/' + flashName + '/'
+    flashPath = getFlashPath()
     cmd = 'mkdir ' + flashPath + 'pcaps -p'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
@@ -99,9 +105,7 @@ def checkFileName(fullFileName):
     if not(drive):
         return 'No flash drive detected.'
     
-    userName  = os.listdir('/media/')[0]
-    flashName = os.listdir('/media/' + userName)[0]
-    flashPath = '/media/' + userName + '/' + flashName + '/pcaps/'
+    flashPath = getFlashPath()
 
     if not( os.path.exists(flashPath) ):
         return False
