@@ -1,5 +1,5 @@
 from flask import Flask, request, send_from_directory, render_template #import main Flask class and request object
-import json, main, os
+import json, main, os, rosdefs
 from flask_cors import CORS
 
 app = Flask(__name__) #create the Flask app
@@ -20,6 +20,9 @@ def check():
 def create():
     obj = request.get_json()
     hasFile = main.getPcap(obj['name'])
+    if(type(hasFile) is int):
+        rosdefs.record(obj['name'])
+
     return json.dumps(hasFile)
 
 @app.route('/dir', methods=['GET'])
@@ -37,6 +40,7 @@ def monitor():
 @app.route('/kill', methods=['GET'])
 def kill():
     path = main.stopPcap()
+    rosdefs.kill()
     return json.dumps(path)
 
 @app.route('/download/<path:filename>', methods=['GET','POST'])
@@ -49,11 +53,11 @@ def download(filename):
 def save():
     obj = request.get_json()
     fileName = obj['name']
-    return json.dumps( main.flashSave(fileName + '.pcap') )
+    return json.dumps( main.flashSave(fileName + '.*') )
 
 @app.route('/check_drive', methods=['GET'])
 def checkDrive():
     return json.dumps( main.checkFlashDrive() )
 
 if __name__ == '__main__':
-    app.run(port=5001, host='0.0.0.0', debug=True)
+    app.run(port=5001, host='0.0.0.0', debug=False)

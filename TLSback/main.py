@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import os, sys, time, re
+import os, sys, time, re, subprocess as sp
 
 class bashInfo:
     sudoPass = ''
@@ -42,14 +42,31 @@ def checkPcap(fullFileName, erase=False):
     else:
         return sz2
 
+def getVlpDevice():
+    devs = sp.run(['ifconfig'], stdout=sp.PIPE)
+    devs = devs.stdout.decode('utf-8').split('\n\n')
+
+    device = ''
+    for i in devs:
+        isVlp = re.match(r'.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
+        if isVlp is not None:
+            device = i
+            break
+    
+    if device == '':
+        return device
+
+    device = '-i ' + device.split(' ')[0]
+    return device
+
 def getPcap(fileName):
 
     exists = checkFileName(fileName + '.pcap')
     if(exists and type(exists) is bool):
         return 'Name already taken.'
 
-    device = 'enxb827eb666ac6'
-    cmd = 'tcpdump -i ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
+    device = getVlpDevice()
+    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
@@ -94,7 +111,7 @@ def flashSave(fullFileName, backGround = False):
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
-    cmd = 'cp pcaps/' + fullFileName + ' ' + flashPath + 'pcaps/' + fullFileName
+    cmd = 'mv pcaps/' + fullFileName + ' ' + flashPath + 'pcaps/' #+ fullFileName
     if(backGround): cmd += ' &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
