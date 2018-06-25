@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sleep 3
-sudo ifconfig eth0 192.168.1.70 netmask 255.255.255.0
+echo ubuntu | sudo -S ifconfig eth0 192.168.1.70 netmask 255.255.255.0
+# echo ubuntu | sudo -S ifconfig enxb827eb666ac6 192.168.1.70 netmask 255.255.255.0
 cd /home/pi/Desktop/TLServer/TLSback
 python3 app.py &

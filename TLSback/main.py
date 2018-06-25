@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-# cmdMaker.setPass('')
+cmdMaker.setPass('ubuntu')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 def checkPcap(fullFileName, erase=False):
@@ -48,7 +48,8 @@ def getPcap(fileName):
     if(exists and type(exists) is bool):
         return 'Name already taken.'
 
-    cmd = 'tcpdump src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
+    device = 'enxb827eb666ac6'
+    cmd = 'tcpdump -i ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
