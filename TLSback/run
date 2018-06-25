@@ -1,7 +1,11 @@
 #!/bin/bash
 
 sleep 3
-echo ubuntu | sudo -S ifconfig eth0 192.168.1.70 netmask 255.255.255.0
-# echo ubuntu | sudo -S ifconfig enxb827eb666ac6 192.168.1.70 netmask 255.255.255.0
-cd /home/pi/Desktop/TLServer/TLSback
-python3 app.py &
+# echo ubuntu | sudo -S ifconfig eth0 192.168.1.70 netmask 255.255.255.0
+echo ubuntu | sudo -S ifconfig enxb827eb666ac6 192.168.1.70 netmask 255.255.255.0
+
+roscore &
+sleep 2 && roslaunch sbg_driver sbg_ellipseA.launch &
+sleep 2 && roslaunch velodyne_pointcloud VLP16_points.launch &
+
+cd /home/pi/Desktop/TLServer/TLSback && python3 app.py &
