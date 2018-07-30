@@ -1,11 +1,13 @@
 #!/bin/bash
 
-sleep 3
-# echo ubuntu | sudo -S ifconfig eth0 192.168.1.70 netmask 255.255.255.0
-echo ubuntu | sudo -S ifconfig enxb827eb666ac6 192.168.1.70 netmask 255.255.255.0
+#sleep 3
+echo tdc12237514 | sudo -S ifconfig enp2s0 192.168.1.70 netmask 255.255.255.0
+# echo ubuntu | sudo -S ifconfig enp 192.168.1.70 netmask 255.255.255.0
 
-roscore &
-sleep 2 && roslaunch sbg_driver sbg_ellipseA.launch &
-sleep 2 && roslaunch velodyne_pointcloud VLP16_points.launch &
+# source /opt/ros/lunar/setup.bash && roscore &
 
-cd /home/pi/Desktop/TLServer/TLSback && python3 app.py &
+# source /opt/ros/lunar/setup.bash && sleep 5 && roslaunch sbg_driver sbg_ellipseA.launch &
+
+# sleep 5 && source /home/tiago/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
+
+source /opt/ros/lunar/setup.bash && cd /home/tiago/Desktop/TLServer/TLSback && python3 app.py &

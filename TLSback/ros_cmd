@@ -1,10 +1,14 @@
 #!/bin/bash
 
+sleep 3
+
+source /opt/ros/lunar/setup.bash
+
 roscore &
 
-sleep 2 && roslaunch sbg_driver sbg_ellipseA.launch &
+sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
 
-sleep 2 && source $HOME/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
+sleep 3 && source /home/tiago/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
 
 # rosbag record -a &
 # rosnode list &

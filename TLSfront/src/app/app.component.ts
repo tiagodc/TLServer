@@ -150,6 +150,7 @@ export class AppComponent {
     if(rename){
       this.fileName = '';
       this.fileLink = "";
+      window.location.reload(true);
     }
   }
 
@@ -211,6 +212,21 @@ export class AppComponent {
 
   ngOnInit(){
     this.checkFlashDrive();
+
+    var that = this;
+    // window.onbeforeunload = function(e){
+    //   that.stopCapture();
+    // }
+
+    window.addEventListener("beforeunload", function (event) {
+      that.stopCapture();
+      // event.returnValue = "browsing away...";
+    });
+
+    if(performance.navigation.type == 1){
+      console.log('page reloaded...')
+      this.stopCapture();      
+    }
   }
 
 }

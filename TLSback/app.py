@@ -1,9 +1,16 @@
 from flask import Flask, request, send_from_directory, render_template #import main Flask class and request object
 import json, main, os, rosdefs
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 app = Flask(__name__) #create the Flask app
 CORS(app)
+socketio = SocketIO(app)
+
+@socketio.on('disconnect')
+def app_left():
+    main.stopPcap()
+    print('left...')
 
 @app.route('/check', methods=['GET'])
 def check():
@@ -20,8 +27,8 @@ def check():
 def create():
     obj = request.get_json()
     hasFile = main.getPcap(obj['name'])
-    if(type(hasFile) is int):
-        rosdefs.record(obj['name'])
+    # if(type(hasFile) is int):
+    #     rosdefs.record(obj['name'])
 
     return json.dumps(hasFile)
 
@@ -40,7 +47,7 @@ def monitor():
 @app.route('/kill', methods=['GET'])
 def kill():
     path = main.stopPcap()
-    rosdefs.kill()
+    # rosdefs.kill()
     return json.dumps(path)
 
 @app.route('/download/<path:filename>', methods=['GET','POST'])
@@ -60,4 +67,5 @@ def checkDrive():
     return json.dumps( main.checkFlashDrive() )
 
 if __name__ == '__main__':
-    app.run(port=5001, host='0.0.0.0', debug=False)
+    socketio.run(app, host='0.0.0.0', port=5001)
+    # app.run(port=5001, host='0.0.0.0', debug=False)

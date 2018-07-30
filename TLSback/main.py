@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('ubuntu')
+cmdMaker.setPass('tdc12237514')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 def checkPcap(fullFileName, erase=False):
