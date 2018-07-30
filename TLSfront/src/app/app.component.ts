@@ -103,7 +103,7 @@ export class AppComponent {
       )
   }
 
-  stopCapture(){
+  stopCapture(block = true){
     let url = this.serverAddress + 'kill'
     
     clearInterval(this.counter);
@@ -112,12 +112,16 @@ export class AppComponent {
       data => {        
         this.fileLink = this.serverAddress + 'download/' + this.fileName + '.pcap';
 
-        this.getChecker.finished = true;
-        this.getChecker.loading = false;
+        if(block){
+          this.getChecker.finished = true;
+          this.getChecker.loading = false;
+        }
       },
       err => {
-        this.getChecker.finished = false;
-        this.getChecker.loading = false;
+        if(block){
+          this.getChecker.finished = false;
+          this.getChecker.loading = false;  
+        }
       }
     );
   }
@@ -219,13 +223,13 @@ export class AppComponent {
     // }
 
     window.addEventListener("beforeunload", function (event) {
-      that.stopCapture();
+      that.stopCapture(false);
       // event.returnValue = "browsing away...";
     });
 
     if(performance.navigation.type == 1){
       console.log('page reloaded...')
-      this.stopCapture();      
+      this.stopCapture(false);
     }
   }
 
