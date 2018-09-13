@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #sleep 3
-echo tdc12237514 | sudo -S ifconfig enp2s0 192.168.1.70 netmask 255.255.255.0
+echo forlidar | sudo -S ifconfig ens1f1 192.168.1.70 netmask 255.255.255.0
+
 # echo ubuntu | sudo -S ifconfig enp 192.168.1.70 netmask 255.255.255.0
 
 # source /opt/ros/lunar/setup.bash && roscore &
@@ -10,4 +11,6 @@ echo tdc12237514 | sudo -S ifconfig enp2s0 192.168.1.70 netmask 255.255.255.0
 
 # sleep 5 && source /home/tiago/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
 
-source /opt/ros/lunar/setup.bash && cd /home/tiago/Desktop/TLServer/TLSback && python3 app.py &
+# source /opt/ros/lunar/setup.bash && cd /home/tiago/Desktop/TLServer/TLSback && python3 app.py &
+
+cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py &

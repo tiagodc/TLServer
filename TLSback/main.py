@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('tdc12237514')
+cmdMaker.setPass('forlidar')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 def checkPcap(fullFileName, erase=False):
@@ -48,7 +48,8 @@ def getVlpDevice():
 
     device = ''
     for i in devs:
-        isVlp = re.match(r'.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
+        # isVlp = re.match(r'.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
+        isVlp = re.match(r'.*encap:Ethernet.*', i, re.MULTILINE|re.DOTALL)
         if isVlp is not None:
             device = i
             break
@@ -83,7 +84,13 @@ def listPcaps():
     return os.listdir('pcaps')
 
 def getFlashPath():
-    userName  = os.listdir('/media/')[0]
+    userName  = os.listdir('/media/')
+
+    if(len(userName) == 0):
+        return False
+    else:
+        userName = userName[0]
+
     fList = os.listdir('/media/' + userName)
     for i in fList:
         isSys = re.match(r'settings\d*', i, re.IGNORECASE)
