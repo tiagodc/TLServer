@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('forlidar')
+cmdMaker.setPass('tdc12237514')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 def checkPcap(fullFileName, erase=False):
@@ -62,9 +62,9 @@ def getVlpDevice():
 
 def getPcap(fileName):
 
-    exists = checkFileName(fileName + '.pcap')
-    if(exists and type(exists) is bool):
-        return 'Name already taken.'
+    # exists = checkFileName(fileName + '.pcap')
+    # if(exists and type(exists) is bool):
+    #     return 'Name already taken.'
 
     device = getVlpDevice()
     cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
@@ -125,18 +125,65 @@ def flashSave(fullFileName, backGround = False):
 
     return checkFlashDrive()
 
-def checkFileName(fullFileName):
-    drive = checkFlashDrive()
-    if not(drive):
-        return 'No flash drive detected.'
+# def checkFileName(fullFileName):
+#     drive = checkFlashDrive()
+#     if not(drive):
+#         return 'No flash drive detected.'
     
-    flashPath = getFlashPath()
+#     flashPath = getFlashPath()
 
-    if not( os.path.exists(flashPath) ):
-        return False
+#     if not( os.path.exists(flashPath) ):
+#         return False
 
-    files = os.listdir(flashPath)
-    if(fullFileName in files):
-        return True
-    else:
-        return False
+#     files = os.listdir(flashPath)
+#     if(fullFileName in files):
+#         return True
+#     else:
+#         return False
+
+def getHardDriveStorage():
+    disks = sp.run(['df'], stdout=sp.PIPE)
+    
+    for i in disks.stdout.decode('utf-8').split('\n'):
+        if re.match(r'.+\s/$', i) is not None:
+            j = re.compile(r'\s+').split(i)
+            spc = float(j[3]) / 1024**2
+            prc = j[4]
+    
+    return {'available': spc, 'used': prc}
+
+def getBatteryLife():
+    acpi = sp.run(['acpi'], stdout=sp.PIPE)
+    acpi = acpi.stdout.decode('utf-8')
+
+    items = re.compile(r'\s+').split(acpi)
+    prc = items[3][0:-1]
+    tm = items[4][0:-3].replace(':','h ') + 'min'
+
+    return {'percentage': prc, 'time': tm}
+
+def moveFiles(inDir, outDir, nameDir='bp_forlidar'):
+    
+    oPath = outDir + '/' + nameDir
+    counter = 0
+    dirOpen = True
+
+    while dirOpen:
+        nPath = oPath + str(counter)
+        if os.path.exists(nPath) and os.path.isdir(nPath):
+            counter += 1
+        else:
+            os.mkdir(nPath)
+            dirOpen = False
+    
+    if inDir == '':
+        inDir = '.'
+
+    cmd = 'mv {}/* {}/'.format(inDir, oPath)
+    cmd = cmdMaker.makeCmd(cmd)
+    
+    os.system(cmd)
+
+def checkFileOnDisk(filePath):
+    
+    return os.path.exists(filePath)

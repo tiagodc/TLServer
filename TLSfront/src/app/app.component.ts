@@ -14,7 +14,7 @@ export class AppComponent {
     if(localhost[nchar-1] == '/') localhost = localhost.substring(0, nchar-1);
   
     this.serverAddress = 'http:' + localhost + ':5001/'
-    console.log('flask: ', this.serverAddress);
+    console.log('flask server: ', this.serverAddress);
   }
   
   fileName = '';
@@ -24,6 +24,7 @@ export class AppComponent {
   startNow: any;
   space: any;
   saving: boolean = false;
+  pcInfo: any;
 
   ajaxHeader = new HttpHeaders({
     'Content-Type': 'application/json'
@@ -37,16 +38,16 @@ export class AppComponent {
     this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
       data => {
         if(data){
-          this.testChecker.msg = 'Working well!'
+          this.testChecker.msg = 'OK!'
           this.testChecker.class = 'workMsg'
         }else{
-          this.testChecker.msg = 'Not working, try reconnecting the cables.'
+          this.testChecker.msg = 'Erro: tente reconectar os cabos.'
           this.testChecker.class = 'failMsg'
         }
         this.testChecker.loading = false;
       },
       err => {
-        this.testChecker.loading = false;          this.testChecker.msg = 'Something went wrong, check the pi.'
+        this.testChecker.loading = false;          this.testChecker.msg = 'Erro: cheque o computador.'
         this.testChecker.class = 'failMsg'
       }
     );
@@ -56,7 +57,7 @@ export class AppComponent {
   captureFile(){
 
     if(this.fileName == ''){
-      this.getChecker.msg = 'Provide a file name.';
+      this.getChecker.msg = 'Dê um nome para o arquivo.';
       this.getChecker.class = 'failMsg';
       return
     }else{
@@ -88,14 +89,14 @@ export class AppComponent {
             this.getChecker.unsaved = false;
           
           }else{
-            this.getChecker.msg = 'No data streaming, check connections.';
+            this.getChecker.msg = 'Sem fluxo de dados, cheque as conexões.';
             this.getChecker.class = 'failMsg';
             this.getChecker.loading = false;
             this.getChecker.unsaved = false;
           }
         },
         err => {
-          this.getChecker.msg = 'Something went wrong, check the pi.';
+          this.getChecker.msg = 'Erro: cheque o computador.';
           this.getChecker.class = 'failMsg';
           this.getChecker.loading = false;
           this.getChecker.unsaved = false;
@@ -133,7 +134,7 @@ export class AppComponent {
     this.http.post(url, 
       {name: this.fileName}, 
       {headers: this.ajaxHeader, responseType: 'json'}).subscribe( (back: any) => {
-        this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB free' : '';
+        this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB livres' : '';
         this.clear();
         this.saving = false;
       })
@@ -175,14 +176,14 @@ export class AppComponent {
               this.getChecker.msg = passed.toFixed(0) + ' s, ' + fSize.toFixed(0) + ' MB';
               this.getChecker.class = 'workMsg';  
             }else{
-              this.getChecker.msg = 'No data streaming, check connections.';
+              this.getChecker.msg = 'Sem fluxo de dados, cheque as conexões.';
               this.getChecker.class = 'failMsg';
               this.getChecker.loading = false;
               this.getChecker.unsaved = false;
             }
           },
           err => {
-            this.getChecker.msg = 'Something went wrong, check the pi.';
+            this.getChecker.msg = 'Erro: cheque o computador.';
             this.getChecker.class = 'failMsg';
             this.getChecker.loading = false;
             this.getChecker.unsaved = false;
@@ -197,26 +198,56 @@ export class AppComponent {
     this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
       (data: any) => {        
         if(data){
-          this.driveChecker.msg = data.toFixed(2) + ' GB free';
+          this.driveChecker.msg = data.toFixed(2) + ' GB livres';
           this.driveChecker.class = 'workMsg'
           this.driveChecker.available = true;
         }else{
-          this.driveChecker.msg = 'No flash drive available.';
+          this.driveChecker.msg = 'Disco flash não disponível.';
           this.driveChecker.class = 'failMsg';
           this.driveChecker.available = false;
         }
       },
       err => {
-        this.driveChecker.msg = 'Something went wrong, check the pi.';
+        this.driveChecker.msg = 'Erro: cheque o computador.';
         this.driveChecker.class = 'failMsg';
         this.driveChecker.available = false;
       }
     );
   }
 
+  pcChecker: any = {dskMsg: '', batMsg: '', dskClass: '', batClass: ''}
+  checkPcInfo(){
+    let url = this.serverAddress + 'check_pc'
+
+    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+      (data: any) => {
+        console.table(data);
+        this.pcChecker.dskMsg = 'Disco ' + data.storage.used + ' cheio, ' + data.storage.available.toFixed(2) + ' GB disponíneis';
+        
+        let dskStr = data.storage.used;
+        let dskSpc = parseFloat( dskStr.substring(0, dskStr.length-1) );
+
+        this.pcChecker.dskClass = dskSpc < 15 ? 'failMsg' : 'workMsg'; 
+
+        this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia, autonomia de ' + data.battery.time;
+        
+        let batStr = data.battery.percentage;
+        let batSpc = parseFloat( batStr.substring(0, batStr.length-1) );
+
+        this.pcChecker.batClass = batSpc < 15 ? 'failMsg' : 'workMsg'; 
+
+      },
+      err => {
+        console.log('pc info error')
+        this.pcChecker.msg = 'Erro: cheque o computador.';
+        this.pcChecker.class = 'failMsg';
+      }
+    );
+  }
+
   ngOnInit(){
     this.checkFlashDrive();
-
+    this.checkPcInfo();
     var that = this;
     // window.onbeforeunload = function(e){
     //   that.stopCapture();

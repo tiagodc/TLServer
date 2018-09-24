@@ -53,6 +53,8 @@ def kill():
 @app.route('/download/<path:filename>', methods=['GET','POST'])
 def download(filename):
     path = os.getcwd() + '/pcaps'
+    if not os.path.exists(path) and not os.path.isdir(path):
+        os.mkdir(path)
     # main.flashSave(filename)
     return send_from_directory(path, filename)
 
@@ -65,6 +67,15 @@ def save():
 @app.route('/check_drive', methods=['GET'])
 def checkDrive():
     return json.dumps( main.checkFlashDrive() )
+
+@app.route('/check_pc', methods=['GET'])
+def pcInfo():
+    return json.dumps( 
+        {
+            'storage': main.getHardDriveStorage(), 
+            'battery': main.getBatteryLife()
+        }
+    )
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)

@@ -1,28 +1,45 @@
 <h2 style="text-align:center">
-  Data collection from VLP16
+  <!-- Data collection from VLP16 -->
+  Coletor de dados <br> <span style="font-style:italic">BackPack Forlidar</span>
 </h2>
 
 <div class="btnContainer">
 
-  <div style="text-align:center">File name (without extension):</div>
+  <div style="text-align:center">
+    <!-- File name (without extension): -->
+    Nome do arquivo (sem extensão):
+  </div>
   <input class="fileNameBox" type="text" [(ngModel)]="fileName" [disabled]="getChecker.unsaved || saving" />
+
+  <div class="pcMsgs">
+    Computador de bordo
+    <div class="msg {{pcChecker.dskClass}}">{{pcChecker.dskMsg}}</div>
+    <div class="msg {{pcChecker.batClass}}">{{pcChecker.batMsg}}</div>
+  </div>
 
   <button class="btn testBtn" (click)="testConnection()" [disabled]="testChecker.loading || getChecker.loading || saving">
       <i *ngIf="testChecker.loading" class="fa fa-cog fa-spin"></i>
-      <span *ngIf="!testChecker.loading">Test System</span>
+      <span *ngIf="!testChecker.loading">
+        <!-- Test System -->
+        Testar sistema
+      </span>
     </button>
   
   <div class="msg {{testChecker.class}}">{{testChecker.msg}}</div>
 
   <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished || saving">
     <i *ngIf="getChecker.loading" class="fa fa-sync fa-spin"></i>
-    <span *ngIf="!getChecker.loading">Capture Data</span>
+    <span *ngIf="!getChecker.loading">
+      <!-- Capture Data -->
+      Capturar dados
+    </span>
   </button>
 
   <div class="msg {{getChecker.class}}">{{getChecker.msg}}</div>
 
   <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg || saving">
-    Stop Capture
+    <!-- Stop Capture -->
+    Parar captura
   </button>
 
   <br><br>
@@ -31,22 +48,31 @@
 
   <button class="btn saveBtn" [disabled]="!getChecker.finished || !driveChecker.available || saving" (click)="save()">
     <i *ngIf="getChecker.loading || saving" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading && !saving">Save File</span>
+    <span *ngIf="!getChecker.loading && !saving">
+      <!-- Save File -->
+      Transferir arquivos para disco flash
+    </span>
   </button>
 
   <div class="msg {{driveChecker.class}}">{{driveChecker.msg}}</div>
   
   <button class="btn downBtn" [disabled]="!getChecker.finished || saving" (click)="download()">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading">Download File</span>
+    <span *ngIf="!getChecker.loading">
+      <!-- Download File -->
+      Baixar arquivo
+    </span>
   </button>
 
-  <br>
-  or
-  <br>
+  <!-- <br>
+  ou
+  <br> -->
 
   <button class="btn clearBtn" [disabled]="!getChecker.finished || saving" (click)="clear(true)">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading">Clear Data</span>
+    <span *ngIf="!getChecker.loading">
+      <!-- Clear Data -->
+      Limpar tela
+    </span>
   </button>
 </div>
