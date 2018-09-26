@@ -217,6 +217,25 @@ export class AppComponent {
     );
   }
 
+  files = [];
+  isFull = false;
+  moveFile(i){
+    if(i == this.files.length || this.isFull){
+      this.transferInfo.active = false;
+      this.transferInfo.n = 0;
+      this.transferInfo.total = 0;
+      return;
+    }
+
+    let temp = this.files[i];
+    this.http.post(temp, 'transfer_file').subscribe(
+      (x: any) => {
+        console.log(x);
+        this.isFull = x == 'full';
+        this.moveFile(i+1);
+      })    
+  }
+
   transferInfo: any = { active : false , n: 0, total: 0, msg: '' };
   transferToFlash(){
     this.http.get('list_files').subscribe( 
@@ -230,23 +249,31 @@ export class AppComponent {
 
         this.transferInfo.active = files.files.length == 0 ? false : true;
         this.transferInfo.total = files.files.length;
+        this.files = files.files;
+        console.log(this.files);
+        this.moveFile(0);
 
-        for(let i = 0; i < files.files.length; i++){
+        /*for(let i = 0; i < files.files.length; i++){
           let temp = files.files[i];
           temp.destination = files.destination;
           
           console.log(i+1, ' of ',files.files.length);
           
+          this.transferInfo.msg = 'transferindo arquivo ' + this.transferInfo.n + ' de ' + this.transferInfo.total;
+
           this.http.post(temp, 'transfer_file').subscribe(
             (x: any) => {
               console.log(x);
               if((i+1) == files.files.length || x == 'full'){
                 this.transferInfo.active = false;
-                this.transferInfo.n = i+1;
-                this.transferInfo.msg = 'transferindo arquivo ' + (i+1) + ' de ' + this.transferInfo.total;
+                this.transferInfo.n = 0;
+                this.transferInfo.total = 0;
               }
+
+              this.transferInfo.n = i+1;
+    
             })
-        }
+        }*/
       })
   }
 

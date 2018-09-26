@@ -80,6 +80,13 @@
   </button>
 </div>
 
-<div [hidden]="!transfering" class='frontPanel'>
-  <i class="fas fa-circle-notch fa-spin spinner"></i>
+<div [hidden]="!transferInfo.active" class='frontPanel'>
+  
+  <div class='spinner'>
+    <div>
+      {{transferInfo.msg}}
+    </div>
+    <i class="fas fa-circle-notch fa-spin"></i>
+  </div>
+
 </div>
