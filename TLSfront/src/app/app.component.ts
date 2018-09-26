@@ -217,11 +217,19 @@ export class AppComponent {
     );
   }
 
+  transferInfo: any = { active : false , n: 0, total: 0, msg: '' };
   transferToFlash(){
     this.http.get('list_files').subscribe( 
       (files: any) => {
 
         console.log(files);
+
+        if(files == 'nousb'){
+          return false;
+        }
+
+        this.transferInfo.active = files.files.length == 0 ? false : true;
+        this.transferInfo.total = files.files.length;
 
         for(let i = 0; i < files.files.length; i++){
           let temp = files.files[i];
@@ -232,6 +240,11 @@ export class AppComponent {
           this.http.post(temp, 'transfer_file').subscribe(
             (x: any) => {
               console.log(x);
+              if((i+1) == files.files.length || x == 'full'){
+                this.transferInfo.active = false;
+                this.transferInfo.n = i+1;
+                this.transferInfo.msg = 'transferindo arquivo ' + (i+1) + ' de ' + this.transferInfo.total;
+              }
             })
         }
       })

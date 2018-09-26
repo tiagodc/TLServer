@@ -64,3 +64,20 @@
     margin-top: 10px;
     font-size: 22px;
 }
+
+.frontPanel{
+    z-index: 10;
+    opacity: 0.5;
+    position: absolute;
+    width: 100vw;
+    height: 300vh;
+    top: 0;
+    background-color: gray;
+    text-align: center;
+}
+
+.spinner{
+    margin-top: 40vh;
+    font-size: 60px;
+    color: red;
+}

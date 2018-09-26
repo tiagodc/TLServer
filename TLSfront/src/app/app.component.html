@@ -59,13 +59,13 @@
 
   <div class="msg {{driveChecker.class}}">{{driveChecker.msg}}</div>
   
-  <button class="btn downBtn" [disabled]="!getChecker.finished || saving" (click)="download()">
+  <!-- <button class="btn downBtn" [disabled]="!getChecker.finished || saving" (click)="download()">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
-    <span *ngIf="!getChecker.loading">
+    <span *ngIf="!getChecker.loading"> -->
       <!-- Download File -->
-      Baixar arquivo
+      <!-- Baixar arquivo
     </span>
-  </button>
+  </button> -->
 
   <!-- <br>
   ou
@@ -78,4 +78,8 @@
       Limpar tela
     </span>
   </button>
+</div>
+
+<div [hidden]="!transfering" class='frontPanel'>
+  <i class="fas fa-circle-notch fa-spin spinner"></i>
 </div>
