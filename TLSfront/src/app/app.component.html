@@ -42,11 +42,14 @@
     Parar captura
   </button>
 
+
   <br><br>
   <div class="spacer"></div>
   <br>
 
-  <button class="btn saveBtn" [disabled]="!getChecker.finished || !driveChecker.available || saving" (click)="save()">
+  
+  <!-- <button class="btn saveBtn" [disabled]="!getChecker.finished || !driveChecker.available || saving" (click)="save()"> -->
+  <button class="btn saveBtn" (click)="transferToFlash()">
     <i *ngIf="getChecker.loading || saving" class="fas fa-circle-notch fa-spin"></i>
     <span *ngIf="!getChecker.loading && !saving">
       <!-- Save File -->

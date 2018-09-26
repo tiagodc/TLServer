@@ -77,6 +77,11 @@ def pcInfo():
         }
     )
 
+@app.route('/list_files', methods=['GET'])
+def listFiles():
+    fl = main.listDiskFiles('pcaps')
+    return json.dumps( fl )
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
     # app.run(port=5001, host='0.0.0.0', debug=False)

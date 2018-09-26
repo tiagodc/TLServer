@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpService } from './http.service';
 
 @Component({
   selector: 'app-root',
@@ -8,34 +8,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class AppComponent {
 
-  constructor(private http: HttpClient){
-    let localhost = window.location.href.split(':')[1];
-    let nchar = localhost.length;
-    if(localhost[nchar-1] == '/') localhost = localhost.substring(0, nchar-1);
-  
-    this.serverAddress = 'http:' + localhost + ':5001/'
-    console.log('flask server: ', this.serverAddress);
-  }
+  constructor(private http: HttpService){ }
   
   fileName = '';
   fileLink = "";
-  serverAddress = '';
   counter: any;
   startNow: any;
   space: any;
   saving: boolean = false;
   pcInfo: any;
 
-  ajaxHeader = new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-
   testChecker: any = {loading: false}
   testConnection(){
-    let url = this.serverAddress + 'check';
-    
+   
     this.testChecker.loading = true;
-    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+    this.http.get('check').subscribe(
       data => {
         if(data){
           this.testChecker.msg = 'OK!'
@@ -47,7 +34,8 @@ export class AppComponent {
         this.testChecker.loading = false;
       },
       err => {
-        this.testChecker.loading = false;          this.testChecker.msg = 'Erro: cheque o computador.'
+        this.testChecker.loading = false;
+        this.testChecker.msg = 'Erro: cheque o computador.'
         this.testChecker.class = 'failMsg'
       }
     );
@@ -64,14 +52,10 @@ export class AppComponent {
       this.getChecker.msg = '';
     }
 
-    let url = this.serverAddress + 'create'
-
     this.getChecker.loading  = true;
     this.getChecker.finished = false;
     this.getChecker.unsaved  = true;
-    this.http.post(url, 
-      {name: this.fileName}, 
-      {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+    this.http.post({name: this.fileName}, 'create').subscribe(
         (resp: any) => {
           console.log('flash file: ', typeof resp);
           if(!!resp && typeof resp === 'number'){
@@ -105,13 +89,12 @@ export class AppComponent {
   }
 
   stopCapture(block = true){
-    let url = this.serverAddress + 'kill'
     
     clearInterval(this.counter);
 
-    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+    this.http.get('kill').subscribe(
       data => {        
-        this.fileLink = this.serverAddress + 'download/' + this.fileName + '.pcap';
+        this.fileLink = this.http.serverAddress + 'download/' + this.fileName + '.pcap';
 
         if(block){
           this.getChecker.finished = true;
@@ -128,12 +111,8 @@ export class AppComponent {
   }
 
   save(){
-    let url = this.serverAddress + 'save';
-
     this.saving = true;
-    this.http.post(url, 
-      {name: this.fileName}, 
-      {headers: this.ajaxHeader, responseType: 'json'}).subscribe( (back: any) => {
+    this.http.post({name: this.fileName}, 'save').subscribe( (back: any) => {
         this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB livres' : '';
         this.clear();
         this.saving = false;
@@ -163,11 +142,7 @@ export class AppComponent {
     this.counter = setInterval(() => {
       if(!this.startNow) return;
       
-      let url = this.serverAddress + 'monitor';
-
-      this.http.post(url, 
-        {name: this.fileName}, 
-        {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+      this.http.post({name: this.fileName}, 'monitor').subscribe(
           (resp: any) => {
             if(!!resp){
               let fSize = parseInt(resp) / 1024 / 1024;
@@ -193,9 +168,8 @@ export class AppComponent {
 
   driveChecker: any = {msg: '', class: '', available: false}
   checkFlashDrive(){
-    let url = this.serverAddress + 'check_drive'
     
-    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+    this.http.get('check_drive').subscribe(
       (data: any) => {        
         if(data){
           this.driveChecker.msg = data.toFixed(2) + ' GB livres';
@@ -217,9 +191,7 @@ export class AppComponent {
 
   pcChecker: any = {dskMsg: '', batMsg: '', dskClass: '', batClass: ''}
   checkPcInfo(){
-    let url = this.serverAddress + 'check_pc'
-
-    this.http.get(url, {headers: this.ajaxHeader, responseType: 'json'}).subscribe(
+    this.http.get('check_pc').subscribe(
       (data: any) => {
         console.table(data);
         this.pcChecker.dskMsg = 'Disco ' + data.storage.used + ' cheio, ' + data.storage.available.toFixed(2) + ' GB disponíneis';
@@ -245,7 +217,17 @@ export class AppComponent {
     );
   }
 
+  transferToFlash(){
+    this.http.get('list_files').subscribe( 
+      (files: any) => {
+        console.log(files);
+      })
+  }
+
   ngOnInit(){
+    // this.http.setLocalhost();
+    // console.log(this.http);
+
     this.checkFlashDrive();
     this.checkPcInfo();
     var that = this;

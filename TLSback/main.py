@@ -187,3 +187,24 @@ def moveFiles(inDir, outDir, nameDir='bp_forlidar'):
 def checkFileOnDisk(filePath):
     
     return os.path.exists(filePath)
+
+def listDiskFiles(path = '.'):
+    
+    files = os.listdir(path)
+    dataFiles = []
+
+    for i in files:
+        isBag  = re.match(r'.+\.bag$', i)
+        isPcap = re.match(r'.+\.pcap$', i)
+
+        if isBag is not None or isPcap is not None:
+            fullPath = path + '/' + i
+            size = os.path.getsize(fullPath) / 1000000
+            dataFiles.append({'path': fullPath, 'size': size})
+    
+    return dataFiles
+
+def moveSingleFile(filePath, outPath):
+    mv = 'mv ' + filePath + ' ' + outPath
+    mv = cmdMaker.makeCmd(mv)
+    os.system(mv)
