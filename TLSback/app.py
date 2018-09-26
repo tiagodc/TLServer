@@ -79,8 +79,27 @@ def pcInfo():
 
 @app.route('/list_files', methods=['GET'])
 def listFiles():
+    flash = main.getFlashPath()
+    
+    if flash == False:
+        return json.dumps('nousb')
+
     fl = main.listDiskFiles('pcaps')
-    return json.dumps( fl )
+    dest = main.makeDirTree(flash)
+    return json.dumps( {'files': fl, 'destination': dest} )
+
+@app.route('/transfer_file', methods=['POST'])
+def transferFile():
+    obj = request.get_json()
+    remSpace = main.getHardDriveStorage()
+    remSpace = 1000 * remSpace['available']
+
+    msg = 'full' if remSpace < obj['size'] else 'next'
+    
+    if msg == 'next':
+        main.moveSingleFile(obj['path'], obj['destination'])
+    
+    return json.dumps(msg)
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)

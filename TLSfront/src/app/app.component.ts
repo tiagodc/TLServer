@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HttpService } from './http.service';
 
 @Component({
@@ -91,7 +91,7 @@ export class AppComponent {
   stopCapture(block = true){
     
     clearInterval(this.counter);
-
+    
     this.http.get('kill').subscribe(
       data => {        
         this.fileLink = this.http.serverAddress + 'download/' + this.fileName + '.pcap';
@@ -193,7 +193,7 @@ export class AppComponent {
   checkPcInfo(){
     this.http.get('check_pc').subscribe(
       (data: any) => {
-        console.table(data);
+
         this.pcChecker.dskMsg = 'Disco ' + data.storage.used + ' cheio, ' + data.storage.available.toFixed(2) + ' GB disponíneis';
         
         let dskStr = data.storage.used;
@@ -201,7 +201,7 @@ export class AppComponent {
 
         this.pcChecker.dskClass = dskSpc < 15 ? 'failMsg' : 'workMsg'; 
 
-        this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia, autonomia de ' + data.battery.time;
+        this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia' //+ ' autonomia de ' + data.battery.time;
         
         let batStr = data.battery.percentage;
         let batSpc = parseFloat( batStr.substring(0, batStr.length-1) );
@@ -220,7 +220,20 @@ export class AppComponent {
   transferToFlash(){
     this.http.get('list_files').subscribe( 
       (files: any) => {
+
         console.log(files);
+
+        for(let i = 0; i < files.files.length; i++){
+          let temp = files.files[i];
+          temp.destination = files.destination;
+          
+          console.log(i+1, ' of ',files.files.length);
+          
+          this.http.post(temp, 'transfer_file').subscribe(
+            (x: any) => {
+              console.log(x);
+            })
+        }
       })
   }
 
@@ -231,14 +244,15 @@ export class AppComponent {
     this.checkFlashDrive();
     this.checkPcInfo();
     var that = this;
+    
     // window.onbeforeunload = function(e){
     //   that.stopCapture();
     // }
 
-    window.addEventListener("beforeunload", function (event) {
-      that.stopCapture(false);
-      // event.returnValue = "browsing away...";
-    });
+    // window.addEventListener("beforeunload", function (event) {
+    //   that.stopCapture(false);
+    //   // event.returnValue = "browsing away...";
+    // });
 
     if(performance.navigation.type == 1){
       console.log('page reloaded...')

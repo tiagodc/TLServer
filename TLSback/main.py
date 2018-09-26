@@ -157,8 +157,13 @@ def getBatteryLife():
     acpi = acpi.stdout.decode('utf-8')
 
     items = re.compile(r'\s+').split(acpi)
-    prc = items[3][0:-1]
-    tm = items[4][0:-3].replace(':','h ') + 'min'
+
+    if len(items) > 5:
+        prc = items[3][0:-1]
+        tm = items[4][0:-3].replace(':','h ') + 'min'
+    else:
+        prc = items[3]
+        tm = 'carregando'
 
     return {'percentage': prc, 'time': tm}
 
@@ -208,3 +213,23 @@ def moveSingleFile(filePath, outPath):
     mv = 'mv ' + filePath + ' ' + outPath
     mv = cmdMaker.makeCmd(mv)
     os.system(mv)
+
+def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
+    dirPath = flashPath + '/' + mainDir
+
+    if not os.path.exists(dirPath):
+        os.mkdir(dirPath)
+    
+    subPath = dirPath + '/' + subDir
+    index = 0
+    dirMissing = True
+
+    while dirMissing:
+        tempPath = subPath + str(index)
+        if os.path.exists(tempPath):
+            index += 1
+        else:
+            os.mkdir(tempPath)
+            dirMissing = False
+
+    return tempPath 
