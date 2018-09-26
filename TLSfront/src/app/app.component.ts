@@ -232,7 +232,7 @@ export class AppComponent {
       (x: any) => {
         console.log(x);
         this.isFull = x == 'full';
-        this.moveFile(i+1);
+        return this.moveFile(i+1);
       })    
   }
 
