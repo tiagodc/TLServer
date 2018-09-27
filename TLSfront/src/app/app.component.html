@@ -80,13 +80,27 @@
   </button>
 </div>
 
-<div [hidden]="!transferInfo.active" class='frontPanel'>
+<div [hidden]="!transferInfo.active">
   
-  <div class='spinner'>
-    <div>
-      {{transferInfo.msg}}
+  <div class='frontPanel'></div>
+
+  <div class='frontContent'>
+
+    <div style="font-size:60px">{{transferInfo.msg}}</div>
+
+    <br>
+
+    <div class='spinner'>
+      <i class="fas fa-circle-notch fa-spin"></i>
     </div>
-    <i class="fas fa-circle-notch fa-spin"></i>
-  </div>
+
+    <br>
+
+    <button class="btn trfCancelBtn" (click)="cancelTransfer()">
+      <span>
+        Cancela transferência
+      </span>
+    </button>
+  </div>  
 
 </div>

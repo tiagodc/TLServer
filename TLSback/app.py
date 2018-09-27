@@ -101,6 +101,11 @@ def transferFile():
     
     return json.dumps(msg)
 
+@app.route('/kill_transfer', methods=['GET'])
+def killTransfer():
+    main.killTransfer()
+    return json.dumps(True)
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
     # app.run(port=5001, host='0.0.0.0', debug=False)

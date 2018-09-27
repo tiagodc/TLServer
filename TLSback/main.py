@@ -232,4 +232,9 @@ def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
             os.mkdir(tempPath)
             dirMissing = False
 
-    return tempPath 
+    return tempPath
+
+def killTransfer():
+    cmd = 'killall -9 mv'
+    cmd = cmdMaker.makeCmd(cmd)
+    os.system(cmd)

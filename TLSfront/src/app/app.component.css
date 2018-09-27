@@ -77,7 +77,22 @@
 }
 
 .spinner{
-    margin-top: 40vh;
-    font-size: 60px;
     color: red;
+    font-size: 80px;
+}
+
+.trfCancelBtn{
+    background-color: rgba(212, 32, 32, 1);
+    color: black;
+}
+
+.frontContent{
+    z-index: 15;
+    position: absolute;
+    top: 0;
+    margin-top: 30vh;
+    font-size: 60px;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
 }
