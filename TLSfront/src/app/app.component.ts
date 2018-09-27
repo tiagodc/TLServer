@@ -199,14 +199,14 @@ export class AppComponent {
         let dskStr = data.storage.used;
         let dskSpc = parseFloat( dskStr.substring(0, dskStr.length-1) );
 
-        this.pcChecker.dskClass = dskSpc < 15 ? 'failMsg' : 'workMsg'; 
+        this.pcChecker.dskClass = dskSpc >= 85 ? 'failMsg' : 'workMsg'; 
 
         this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia' //+ ' autonomia de ' + data.battery.time;
         
         let batStr = data.battery.percentage;
         let batSpc = parseFloat( batStr.substring(0, batStr.length-1) );
 
-        this.pcChecker.batClass = batSpc < 15 ? 'failMsg' : 'workMsg'; 
+        this.pcChecker.batClass = batSpc <= 15 ? 'failMsg' : 'workMsg'; 
 
       },
       err => {
@@ -225,6 +225,7 @@ export class AppComponent {
       this.transferInfo.active = false;
       this.transferInfo.n = 0;
       this.transferInfo.total = 0;
+      this.saving = false;
       return;
     }
 
@@ -251,6 +252,7 @@ export class AppComponent {
       this.transferInfo.active = false;
       this.transferInfo.n = 0;
       this.transferInfo.total = 0;
+      this.saving = false;
     },
     err => {
       console.log(err);
@@ -267,10 +269,11 @@ export class AppComponent {
           return false;
         }
 
-        this.transferInfo.active = files.files.length == 0 ? false : true;
+        this.transferInfo.active = true;
         this.transferInfo.total = files.files.length;
         this.files = files.files;
         this.stopTransfer = false;
+        this.saving = true;
 
         this.moveFile(0, files.destination);
       })
