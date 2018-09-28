@@ -97,3 +97,8 @@
     width: 100vw;
     height: 100vh;
 }
+
+.shutBtn{
+    color: white;
+    background-color: rgba(0, 0, 0, 0.829);
+}

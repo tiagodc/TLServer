@@ -1,6 +1,7 @@
 import { Component /*, Inject*/ } from '@angular/core';
 // import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { HttpService } from './http.service';
+import { post } from 'selenium-webdriver/http';
 
 
 @Component({
@@ -77,15 +78,6 @@ export class AppComponent {
   getChecker: any = {loading: false, finished: false};
   captureFile(){
 
-    /*if(this.fileName == ''){
-      this.getChecker.msg = 'Dê um nome para o arquivo.';
-      this.getChecker.class = 'failMsg';
-      return
-    }else{
-      this.getChecker.msg = '';
-    }*/
-
-    // this.getChecker.loading  = true;
     this.getChecker.finished = false;
     this.getChecker.unsaved  = true;
 
@@ -133,12 +125,13 @@ export class AppComponent {
         if(block){
           this.getChecker.finished = true;
           this.getChecker.loading = false;
+          this.getChecker.unsaved = false;
         }
       },
       err => {
         if(block){
           this.getChecker.finished = false;
-          this.getChecker.loading = false;  
+          this.getChecker.loading = false;
         }
       }
     );
@@ -261,11 +254,12 @@ export class AppComponent {
   isFull = false;
   stopTransfer = false;
   moveFile(i, dest){
-    if(i == this.files.length || this.isFull || this.stopTransfer){
+    if(i == this.files.length || this.isFull || this.stopTransfer || !dest){
       this.transferInfo.active = false;
       this.transferInfo.n = 0;
       this.transferInfo.total = 0;
       this.saving = false;
+      this.clear();
       return;
     }
 
@@ -317,6 +311,14 @@ export class AppComponent {
 
         this.moveFile(0, files.destination);
       })
+  }
+
+  shutdown(){
+    let sure = confirm('Tem certeza que deseja desligar o computador?')
+    if(sure){
+      this.http.get('shutdown').subscribe()
+      this.saving = false;
+    }
   }
 
   ngOnInit(){

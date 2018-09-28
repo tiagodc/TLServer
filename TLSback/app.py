@@ -85,7 +85,7 @@ def listFiles():
         return json.dumps('nousb')
 
     fl = main.listDiskFiles('pcaps')
-    dest = main.makeDirTree(flash)
+    dest = main.makeDirTree(flash) if len(fl) > 0 else False
     return json.dumps( {'files': fl, 'destination': dest} )
 
 @app.route('/transfer_file', methods=['POST'])
@@ -120,6 +120,12 @@ def checkFile():
     exists = main.checkFileOnDisk(path)
     return json.dumps(exists)
 
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    sudo = main.cmdMaker.makeCmd('shutdown now -P -f')
+    os.system(sudo)
+    return json.dumps(True)
+
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5001, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5001, debug=False)
     # app.run(port=5001, host='0.0.0.0', debug=False)

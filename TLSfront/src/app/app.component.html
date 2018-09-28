@@ -27,7 +27,7 @@
   
   <div class="msg {{testChecker.class}}">{{testChecker.msg}}</div>
 
-  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished || saving || testChecker.loading">
+  <button class="btn getBtn" (click)="checkFileExists()" [disabled]="getChecker.loading || saving || testChecker.loading">
     <i *ngIf="getChecker.loading" class="fa fa-sync fa-spin"></i>
     <span *ngIf="!getChecker.loading">
       <!-- Capture Data -->
@@ -78,13 +78,21 @@
       Limpar tela
     </span>
   </button>
+
+  <button class="btn shutBtn" [disabled]="saving || testChecker.loading || getChecker.loading" (click)="shutdown()">
+    <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
+    <span *ngIf="!getChecker.loading">
+      Desliga computador
+    </span>
+  </button>
+
 </div>
 
 <div [hidden]="!transferInfo.active">
   
   <div class='frontPanel'></div>
 
-  <div class='frontContent'>
+  <div class='frontContent' *ngIf='saving'>
 
     <div style="font-size:60px">{{transferInfo.msg}}</div>
 
