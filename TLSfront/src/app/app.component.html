@@ -27,7 +27,7 @@
   
   <div class="msg {{testChecker.class}}">{{testChecker.msg}}</div>
 
-  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished || saving">
+  <button class="btn getBtn" (click)="captureFile()" [disabled]="getChecker.loading || getChecker.finished || saving || testChecker.loading">
     <i *ngIf="getChecker.loading" class="fa fa-sync fa-spin"></i>
     <span *ngIf="!getChecker.loading">
       <!-- Capture Data -->
@@ -37,7 +37,7 @@
 
   <div class="msg {{getChecker.class}}">{{getChecker.msg}}</div>
 
-  <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg || saving">
+  <button class="btn stopBtn" (click)="stopCapture()" [disabled]="!getChecker.loading || !getChecker.msg || saving || testChecker.loading">
     <!-- Stop Capture -->
     Parar captura
   </button>
@@ -49,7 +49,7 @@
 
   
   <!-- <button class="btn saveBtn" [disabled]="!getChecker.finished || !driveChecker.available || saving" (click)="save()"> -->
-  <button class="btn saveBtn" (click)="transferToFlash()" [disabled]="!driveChecker.available || saving || getChecker.loading">
+  <button class="btn saveBtn" (click)="transferToFlash()" [disabled]="!driveChecker.available || saving || getChecker.loading || testChecker.loading">
     <i *ngIf="getChecker.loading || saving" class="fas fa-circle-notch fa-spin"></i>
     <span *ngIf="!getChecker.loading && !saving">
       <!-- Save File -->
@@ -71,7 +71,7 @@
   ou
   <br> -->
 
-  <button class="btn clearBtn" [disabled]="!getChecker.finished || saving" (click)="clear(true)">
+  <button class="btn clearBtn" [disabled]="!getChecker.finished || saving || testChecker.loading" (click)="clear(true)">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
     <span *ngIf="!getChecker.loading">
       <!-- Clear Data -->

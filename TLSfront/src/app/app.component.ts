@@ -1,5 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component /*, Inject*/ } from '@angular/core';
+// import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { HttpService } from './http.service';
+
 
 @Component({
   selector: 'app-root',
@@ -8,7 +10,7 @@ import { HttpService } from './http.service';
 })
 export class AppComponent {
 
-  constructor(private http: HttpService){ }
+  constructor(private http: HttpService/*, public dialog: MatDialog*/){ }
   
   fileName = '';
   fileLink = "";
@@ -41,9 +43,8 @@ export class AppComponent {
     );
   }
 
-  getChecker: any = {loading: false, finished: false};
-  captureFile(){
-
+  checkFileExists(){
+    
     if(this.fileName == ''){
       this.getChecker.msg = 'Dê um nome para o arquivo.';
       this.getChecker.class = 'failMsg';
@@ -53,8 +54,41 @@ export class AppComponent {
     }
 
     this.getChecker.loading  = true;
+
+    this.http.post({name: this.fileName}, 'check_file').subscribe(
+      x => {
+        var answer = true;
+        if(x){
+          answer = confirm('Já existe um arquivo com esse nome, deseja sobrescrevê-lo?');
+        }
+        
+        console.log('answer: ', answer);
+
+        if(answer){
+          this.captureFile()
+        }else{
+          this.getChecker.loading  = false;
+        }
+      },
+      err => console.log('erro de arquivo', err)
+      );
+  }
+
+  getChecker: any = {loading: false, finished: false};
+  captureFile(){
+
+    /*if(this.fileName == ''){
+      this.getChecker.msg = 'Dê um nome para o arquivo.';
+      this.getChecker.class = 'failMsg';
+      return
+    }else{
+      this.getChecker.msg = '';
+    }*/
+
+    // this.getChecker.loading  = true;
     this.getChecker.finished = false;
     this.getChecker.unsaved  = true;
+
     this.http.post({name: this.fileName}, 'create').subscribe(
         (resp: any) => {
           console.log('flash file: ', typeof resp);
@@ -148,7 +182,7 @@ export class AppComponent {
               let fSize = parseInt(resp) / 1024 / 1024;
               let passed = (Date.now() - this.startNow) / 1000;
               
-              this.getChecker.msg = passed.toFixed(0) + ' s, ' + fSize.toFixed(0) + ' MB';
+              this.getChecker.msg = passed.toFixed(0) + ' s'; //+ fSize.toFixed(0) + ' MB';
               this.getChecker.class = 'workMsg';  
             }else{
               this.getChecker.msg = 'Sem fluxo de dados, cheque as conexões.';
@@ -168,13 +202,19 @@ export class AppComponent {
 
   driveChecker: any = {msg: '', class: '', available: false}
   checkFlashDrive(){
-    
+
     this.http.get('check_drive').subscribe(
       (data: any) => {        
         if(data){
           this.driveChecker.msg = data.toFixed(2) + ' GB livres';
           this.driveChecker.class = 'workMsg'
           this.driveChecker.available = true;
+
+          if(this.isFull){
+            this.driveChecker.msg = 'Disco cheio!';
+            this.driveChecker.class = 'failMsg';
+          }
+
         }else{
           this.driveChecker.msg = 'Disco flash não disponível.';
           this.driveChecker.class = 'failMsg';
@@ -280,12 +320,13 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    // this.http.setLocalhost();
-    // console.log(this.http);
 
-    this.checkFlashDrive();
-    this.checkPcInfo();
     var that = this;
+
+    setInterval(() =>{
+      this.checkPcInfo()
+      this.checkFlashDrive()
+    }, 1000);
     
     // window.onbeforeunload = function(e){
     //   that.stopCapture();
@@ -296,10 +337,8 @@ export class AppComponent {
     //   // event.returnValue = "browsing away...";
     // });
 
-    if(performance.navigation.type == 1){
-      console.log('page reloaded...')
-      this.stopCapture(false);
-    }
+    this.stopCapture(false);
+    this.http.get('make_dir').subscribe();
   }
 
 }

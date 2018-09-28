@@ -106,6 +106,20 @@ def killTransfer():
     main.killTransfer()
     return json.dumps(True)
 
+@app.route('/make_dir', methods=['GET'])
+def makeDir():
+    folder = 'pcaps'
+    if not os.path.exists(folder) or not os.path.isdir(folder):
+        os.mkdir(folder)
+    return json.dumps(0)
+
+@app.route('/check_file', methods=['POST'])
+def checkFile():
+    obj = request.get_json()
+    path = 'pcaps/' + obj['name'] + '.pcap'
+    exists = main.checkFileOnDisk(path)
+    return json.dumps(exists)
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
     # app.run(port=5001, host='0.0.0.0', debug=False)
