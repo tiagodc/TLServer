@@ -29,7 +29,6 @@ def create():
     hasFile = main.getPcap(obj['name'])
     if(type(hasFile) is int):
         rosdefs.record(obj['name'])
-
     return json.dumps(hasFile)
 
 @app.route('/dir', methods=['GET'])
@@ -72,8 +71,8 @@ def checkDrive():
 def pcInfo():
     return json.dumps( 
         {
-            'storage': main.getHardDriveStorage(), 
-            'battery': main.getBatteryLife()
+            'storage': main.getHardDriveStorage() 
+            # 'battery': main.getBatteryLife()
         }
     )
 
@@ -125,6 +124,19 @@ def shutdown():
     sudo = main.cmdMaker.makeCmd('shutdown now -P -f')
     os.system(sudo)
     return json.dumps(True)
+
+@app.route('/sensor_monitor', methods=['GET'])
+def sensor_monitor():
+    job = main.monitor(3)
+    
+    gps = job.gps()
+    imu = job.imu()
+    laser_pcap = job.laser()
+    laser_bag = job.laser(True)
+
+    minLen = 100
+    obj = {'gps': gps > minLen, 'imu': imu > minLen, 'laser_pcap': laser_pcap > minLen, 'laser_bag': laser_bag > minLen}
+    return json.dumps(obj)
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=False)

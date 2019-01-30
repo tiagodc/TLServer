@@ -27,6 +27,39 @@ cmdMaker = bashInfo()
 cmdMaker.setPass('forlidar')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
+class monitor:
+    timeout = 3
+
+    def gps(self):
+        device = getVlpDevice()
+        cmd = self.timeout + 'tcpdump ' + device + ' src 192.168.1.201 and port 8308'
+        cmd = cmdMaker.makeCmd(cmd)
+        out = sp.run(cmd, shell=True, stdout=sp.PIPE)
+        out = str(out.stdout)
+        return len(out)
+    
+    def imu(self):
+        cmd = self.timeout + 'rostopic echo /imu_data'
+        out = sp.run(cmd, shell=True, stdout=sp.PIPE)
+        out = str(out.stdout)
+        return len(out)
+
+    def laser(self, ros=False):
+        if ros:
+            cmd = self.timeout + 'rostopic echo /velodyne_points'
+        else:
+            device = getVlpDevice()
+            cmd = self.timeout + 'tcpdump ' + device + ' src 192.168.1.201 and port 2368'
+            cmd = cmdMaker.makeCmd(cmd)
+
+        out = sp.run(cmd, shell=True, stdout=sp.PIPE)
+        out = str(out.stdout)
+        return len(out)
+    
+    def __init__(self, tm=3):
+        self.timeout = 'timeout ' + str(tm) + ' '
+
+
 def checkPcap(fullFileName, erase=False):
     sz1 = os.path.getsize( fullFileName )
     
@@ -152,20 +185,20 @@ def getHardDriveStorage():
     
     return {'available': spc, 'used': prc}
 
-def getBatteryLife():
-    acpi = sp.run(['acpi'], stdout=sp.PIPE)
-    acpi = acpi.stdout.decode('utf-8')
+# def getBatteryLife():
+#     acpi = sp.run(['acpi'], stdout=sp.PIPE)
+#     acpi = acpi.stdout.decode('utf-8')
 
-    items = re.compile(r'\s+').split(acpi)
+#     items = re.compile(r'\s+').split(acpi)
 
-    if len(items) > 5:
-        prc = items[3][0:-1]
-        tm = items[4][0:-3].replace(':','h ') + 'min'
-    else:
-        prc = items[3]
-        tm = 'carregando'
+#     if len(items) > 5:
+#         prc = items[3][0:-1]
+#         tm = items[4][0:-3].replace(':','h ') + 'min'
+#     else:
+#         prc = items[3]
+#         tm = 'carregando'
 
-    return {'percentage': prc, 'time': tm}
+#     return {'percentage': prc, 'time': tm}
 
 def moveFiles(inDir, outDir, nameDir='bp_forlidar'):
     
@@ -238,3 +271,6 @@ def killTransfer():
     cmd = 'killall -9 mv'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
+
+
+

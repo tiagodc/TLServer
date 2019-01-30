@@ -1,16 +1,22 @@
 #!/bin/bash
 
-#sleep 3
-echo forlidar | sudo -S ifconfig ens1f1 192.168.1.70 netmask 255.255.255.0
+sleep 3
+
+# echo forlidar | sudo -S ifconfig enp3s0 192.168.1.70 netmask 255.255.255.0
+
+source /opt/ros/kinetic/setup.bash
+
+roscore &
+
+sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
+
+sleep 3 && roslaunch velodyne_pointcloud VLP16_points.launch &
+
+sleep 5 && cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py &
 
 # echo ubuntu | sudo -S ifconfig enp 192.168.1.70 netmask 255.255.255.0
-
 # source /opt/ros/lunar/setup.bash && roscore &
-
 # source /opt/ros/lunar/setup.bash && sleep 5 && roslaunch sbg_driver sbg_ellipseA.launch &
-
 # sleep 5 && source /home/tiago/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
-
 # source /opt/ros/lunar/setup.bash && cd /home/tiago/Desktop/TLServer/TLSback && python3 app.py &
 
-cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py &

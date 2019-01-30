@@ -21,28 +21,28 @@ export class AppComponent {
   saving: boolean = false;
   pcInfo: any;
 
-  testChecker: any = {loading: false}
-  testConnection(){
+  // testChecker: any = {loading: false}
+  // testConnection(){
    
-    this.testChecker.loading = true;
-    this.http.get('check').subscribe(
-      data => {
-        if(data){
-          this.testChecker.msg = 'OK!'
-          this.testChecker.class = 'workMsg'
-        }else{
-          this.testChecker.msg = 'Erro: tente reconectar os cabos.'
-          this.testChecker.class = 'failMsg'
-        }
-        this.testChecker.loading = false;
-      },
-      err => {
-        this.testChecker.loading = false;
-        this.testChecker.msg = 'Erro: cheque o computador.'
-        this.testChecker.class = 'failMsg'
-      }
-    );
-  }
+  //   this.testChecker.loading = true;
+  //   this.http.get('check').subscribe(
+  //     data => {
+  //       if(data){
+  //         this.testChecker.msg = 'OK!'
+  //         this.testChecker.class = 'workMsg'
+  //       }else{
+  //         this.testChecker.msg = 'Erro: tente reconectar os cabos.'
+  //         this.testChecker.class = 'failMsg'
+  //       }
+  //       this.testChecker.loading = false;
+  //     },
+  //     err => {
+  //       this.testChecker.loading = false;
+  //       this.testChecker.msg = 'Erro: cheque o computador.'
+  //       this.testChecker.class = 'failMsg'
+  //     }
+  //   );
+  // }
 
   checkFileExists(){
     
@@ -63,8 +63,6 @@ export class AppComponent {
           answer = confirm('Já existe um arquivo com esse nome, deseja sobrescrevê-lo?');
         }
         
-        console.log('answer: ', answer);
-
         if(answer){
           this.captureFile()
         }else{
@@ -154,7 +152,7 @@ export class AppComponent {
   }
 
   clear(rename = false){
-    this.testChecker = {loading: false}
+    // this.testChecker = {loading: false}
     this.getChecker = {loading: false, finished: false};
     this.startNow = 0;
 
@@ -172,17 +170,17 @@ export class AppComponent {
       this.http.post({name: this.fileName}, 'monitor').subscribe(
           (resp: any) => {
             if(!!resp){
-              let fSize = parseInt(resp) / 1024 / 1024;
+              // let fSize = parseInt(resp) / 1024 / 1024;
               let passed = (Date.now() - this.startNow) / 1000;
               
               this.getChecker.msg = passed.toFixed(0) + ' s'; //+ fSize.toFixed(0) + ' MB';
               this.getChecker.class = 'workMsg';  
-            }else{
+            }/*else{
               this.getChecker.msg = 'Sem fluxo de dados, cheque as conexões.';
               this.getChecker.class = 'failMsg';
               this.getChecker.loading = false;
               this.getChecker.unsaved = false;
-            }
+            }*/
           },
           err => {
             this.getChecker.msg = 'Erro: cheque o computador.';
@@ -234,12 +232,12 @@ export class AppComponent {
 
         this.pcChecker.dskClass = dskSpc >= 85 ? 'failMsg' : 'workMsg'; 
 
-        this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia' //+ ' autonomia de ' + data.battery.time;
+        // this.pcChecker.batMsg = 'Bateria ' + data.battery.percentage + ' cheia' //+ ' autonomia de ' + data.battery.time;
         
-        let batStr = data.battery.percentage;
-        let batSpc = parseFloat( batStr.substring(0, batStr.length-1) );
+        // let batStr = data.battery.percentage;
+        // let batSpc = parseFloat( batStr.substring(0, batStr.length-1) );
 
-        this.pcChecker.batClass = batSpc <= 15 ? 'failMsg' : 'workMsg'; 
+        // this.pcChecker.batClass = batSpc <= 15 ? 'failMsg' : 'workMsg'; 
 
       },
       err => {
@@ -321,14 +319,32 @@ export class AppComponent {
     }
   }
 
+  sensors: any = {monitor:{}, msg:{}, class:{}}
+  checkSensors(){
+    this.http.get('sensor_monitor').subscribe(
+      (x: any) => {
+        x.lidar = x.laser_pcap && x.laser_bag;
+        this.sensors.monitor = x;
+
+        for(let i in x){
+          this.sensors.msg[i] = x[i] ? 'OK' : 'N/A';
+          this.sensors.class[i] = x[i] ? 'workMsg' : 'failMsg';
+        }
+
+        this.checkSensors();
+      }
+    )
+  }
+
   ngOnInit(){
 
     var that = this;
+    that.checkSensors();
 
     setInterval(() =>{
       this.checkPcInfo()
       this.checkFlashDrive()
-    }, 1000);
+    }, 10000);
     
     // window.onbeforeunload = function(e){
     //   that.stopCapture();
