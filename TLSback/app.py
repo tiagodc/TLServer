@@ -85,6 +85,7 @@ def listFiles():
 
     fl = main.listDiskFiles('pcaps')
     dest = main.makeDirTree(flash) if len(fl) > 0 else False
+
     return json.dumps( {'files': fl, 'destination': dest} )
 
 @app.route('/transfer_file', methods=['POST'])
@@ -92,7 +93,7 @@ def transferFile():
     obj = request.get_json()
     remSpace = main.getHardDriveStorage()
     remSpace = 1000 * remSpace['available']
-
+    
     msg = 'full' if remSpace < obj['size'] else 'next'
     
     if msg == 'next':

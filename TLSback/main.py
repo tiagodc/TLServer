@@ -243,9 +243,13 @@ def listDiskFiles(path = '.'):
     return dataFiles
 
 def moveSingleFile(filePath, outPath):
-    mv = 'mv ' + filePath + ' ' + outPath
+    mv = 'cp ' + filePath + ' ' + outPath
     mv = cmdMaker.makeCmd(mv)
     os.system(mv)
+
+    rm = 'rm ' + filePath
+    rm = cmdMaker.makeCmd(rm)
+    os.system(rm)
 
 def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
     dirPath = flashPath + '/' + mainDir
@@ -268,7 +272,11 @@ def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
     return tempPath
 
 def killTransfer():
-    cmd = 'killall -9 mv'
+    cmd = 'killall -9 rm'
+    cmd = cmdMaker.makeCmd(cmd)
+    os.system(cmd)
+
+    cmd = 'killall -9 cp'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
