@@ -101,6 +101,12 @@ def transferFile():
     
     return json.dumps(msg)
 
+@app.route('/delete_file', methods=['POST'])
+def deleteFile():
+    obj = request.get_json()
+    main.removeSingleFile(obj['path'])    
+    return json.dumps(None)
+
 @app.route('/kill_transfer', methods=['GET'])
 def killTransfer():
     main.killTransfer()
