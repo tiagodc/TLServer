@@ -269,7 +269,7 @@ export class AppComponent {
     this.http.post(temp, 'transfer_file').subscribe(
       (x: any) => {
         this.isFull = x == 'full';
-        if(!this.isFull) this.http.post(temp, 'delete_file').subscribe(() => null, (error: any) => console.log(error));  
+        if(!this.isFull || !this.stopTransfer) this.http.post(temp, 'delete_file').subscribe(() => null, (error: any) => console.log(error));  
         return this.moveFile(i+1, dest);
       },
       (error: any) => {

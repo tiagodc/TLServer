@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('tdc12237514')
+cmdMaker.setPass('forlidar')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 class monitor:
