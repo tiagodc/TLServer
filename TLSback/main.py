@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('forlidar')
+cmdMaker.setPass('tdc12237514')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 class monitor:
@@ -178,7 +178,7 @@ def getHardDriveStorage():
     disks = sp.run(['df'], stdout=sp.PIPE)
     
     for i in disks.stdout.decode('utf-8').split('\n'):
-        if re.match(r'.+\s/media/.+$', i) is not None:
+        if re.match(r'.+\s/$', i) is not None:
             j = re.compile(r'\s+').split(i)
             spc = float(j[3]) / 1024**2
             prc = j[4]
@@ -250,6 +250,9 @@ def moveSingleFile(filePath, outPath):
 def removeSingleFile(filePath):
     rm = 'rm ' + filePath
     rm = cmdMaker.makeCmd(rm)
+    print('\n\n\n')
+    print(rm)
+    print('\n\n\n')
     os.system(rm)
 
 def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
