@@ -279,7 +279,7 @@ var AppComponent = (function () {
         temp.destination = dest;
         this.http.post(temp, 'transfer_file').subscribe(function (x) {
             _this.isFull = x == 'full';
-            if (!_this.isFull && !_this.stopTransfer)
+            if (!_this.isFull)
                 _this.http.post(temp, 'delete_file').subscribe(function () { return null; }, function (error) { return console.log(error); });
             return _this.moveFile(i + 1, dest);
         }, function (error) {

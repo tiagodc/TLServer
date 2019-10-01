@@ -24,7 +24,7 @@ class bashInfo:
         self.setBase()
 
 cmdMaker = bashInfo()
-cmdMaker.setPass('tdc12237514')
+cmdMaker.setPass('forlidar')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
 class monitor:
@@ -250,9 +250,6 @@ def moveSingleFile(filePath, outPath):
 def removeSingleFile(filePath):
     rm = 'rm ' + filePath
     rm = cmdMaker.makeCmd(rm)
-    print('\n\n\n')
-    print(rm)
-    print('\n\n\n')
     os.system(rm)
 
 def makeDirTree(flashPath, mainDir = 'bp_forlidar', subDir = 'trsf'):
