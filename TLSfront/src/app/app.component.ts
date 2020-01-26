@@ -362,7 +362,14 @@ export class AppComponent {
     //   // event.returnValue = "browsing away...";
     // });
 
+    window.addEventListener('beforeunload', (e) => {            
+      this.stopCapture(false);
+      this.cancelTransfer(); 
+    });
+
     this.stopCapture(false);
+    this.cancelTransfer(); 
+
     this.http.get('make_dir').subscribe();
   }
 
