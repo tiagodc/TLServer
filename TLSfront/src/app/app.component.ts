@@ -260,13 +260,12 @@ export class AppComponent {
       this.saving = false;
       this.clear();
       
-      let j = i
+      let j = i;
       if(this.isFull || this.stopTransfer){
         j = i === 0 ? 0 : i-1;
       }
       
       this.driveChecker.trf_msg = j + ' de ' + this.files.length + ' arquivos transferidos.';  
-      // }
 
       return;
     }
