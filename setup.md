@@ -106,9 +106,11 @@ Encontre o nome da conexão ethernet pelo comando `ifconfig`. Procure pelo prime
 
 Configure a conexão de rede ethernet com o VLP16. Altere as configurações de IPv4 para método *manual*, *address* **192.168.1.70** e *netmask* 255.255.255.0
 
+Teste a conexão com o VLP-16 no browser, no IP **http://192.168.1.201/**
+
 #### Apache
 
-Reconfigure o caminho default do *localhost* para a página onde ficará o *front-end* do aplicativo nos arquivos `/etc/apache2/sites-enabled/000-default.conf` e `/etc/apache2/sites-available/000-default.conf` (ex. `/var/www/lidar`)
+Reconfigure o caminho default do *localhost* para a página onde ficará o *front-end* do aplicativo no arquivo `/etc/apache2/sites-available/000-default.conf` (ex. `/var/www/lidar`)
 
 Reinicie o `apache`
 ```
@@ -123,11 +125,11 @@ git clone https://github.com/tiagodc/TLServer.git
 cd TLServer
 ```
 
-Edite o arquivo `./TLSback/run` e altere o comando:
+Compile o pacote ROS do GPS em `TLSback/catkin_gps` usando `catkin_make`:
 ```
-echo passwd | sudo -S ifconfig lidar 192.168.1.70 netmask 255.255.255.0
+cd ./TLSback/catkin_gps
+catkin_make
 ```
-Coloque a senha de acesso do usuário no lugar de `passwd` e o nome da conexão ethernet no lugar de `lidar` (encontrada via `ifconfig`, descrito no tópico de configuração do LiDAR)
 
 Altere os caminhos necessários no arquivo `run` (ex.: caminho de acesso ao diretório `TLSback`)
 
@@ -135,7 +137,7 @@ Edite o arquivo `./TLSback/main.py`, alterando o comando `cmdMaker.setPass('pass
 
 Copie o conteúdo do diretório `./TLSfront/dist` para o diretório do *localhost*, definido na configuração do `apache`, ex.:
 ```
-sudo cp ./TLSfront/dist/* /var/www/lidar/. -r
+sudo cp ./TLSfront/dist /var/www/lidar -r
 ```
 
 Adicione o comando para execução automática do arquivo `./TLSback/run` a cada vez que o computador é ligado, editando o arquivo `/etc/rc.local`, ex.:

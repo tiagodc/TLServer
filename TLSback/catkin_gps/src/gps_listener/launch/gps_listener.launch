@@ -1,0 +1,5 @@
+<launch>
+
+	<node name="listenerGPS" type="listenerGPS.py" pkg="gps_listener" output="screen" />
+
+</launch>

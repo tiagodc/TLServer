@@ -1,2 +1,6 @@
 __pycache__
 TLSback/pcaps/*
+TLSback/catkin_gps/build/
+TLSback/catkin_gps/devel/
+TLSback/catkin_gps/install/
+TLSback/catkin_gps/src/CMakeLists.txt
