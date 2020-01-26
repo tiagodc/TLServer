@@ -220,13 +220,14 @@ export class AppComponent {
     );
   }
 
-  pcChecker: any = {dskMsg: '', batMsg: '', dskClass: '', batClass: ''}
+  pcChecker: any = {dskMsg: '', batMsg: '', dskClass: '', batClass: '', fileMsg: ''}
   checkPcInfo(){
     this.http.get('check_pc').subscribe(
       (data: any) => {
 
         this.pcChecker.dskMsg = 'Disco ' + data.storage.used + ' cheio, ' + data.storage.available.toFixed(2) + ' GB disponíneis';
-        
+        this.pcChecker.fileMsg = data.files + ' arquivo(s) não transferidos';        
+
         let dskStr = data.storage.used;
         let dskSpc = parseFloat( dskStr.substring(0, dskStr.length-1) );
 
@@ -259,10 +260,13 @@ export class AppComponent {
       this.saving = false;
       this.clear();
       
+      let j = i
       if(this.isFull || this.stopTransfer){
-        let j = i === 0 ? 0 : i-1;
-        this.driveChecker.trf_msg = j + ' de ' + this.files.length + ' arquivos transferidos.';  
+        j = i === 0 ? 0 : i-1;
       }
+      
+      this.driveChecker.trf_msg = j + ' de ' + this.files.length + ' arquivos transferidos.';  
+      // }
 
       return;
     }

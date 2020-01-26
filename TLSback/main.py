@@ -283,6 +283,7 @@ def killTransfer():
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
-
+def getUntransferedFiles():
+    return len(listPcaps())
 
 

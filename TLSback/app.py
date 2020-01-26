@@ -71,7 +71,8 @@ def checkDrive():
 def pcInfo():
     return json.dumps( 
         {
-            'storage': main.getHardDriveStorage() 
+            'storage': main.getHardDriveStorage(),
+            'files': main.getUntransferedFiles() 
             # 'battery': main.getBatteryLife()
         }
     )
