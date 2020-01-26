@@ -91,20 +91,25 @@ def listFiles():
 @app.route('/transfer_file', methods=['POST'])
 def transferFile():
     obj = request.get_json()
-    remSpace = main.getHardDriveStorage()
-    remSpace = 1000 * remSpace['available']
+    remSpace = main.checkFlashDrive()
+    remSpace = 1000 * remSpace
     
     msg = 'full' if remSpace < obj['size'] else 'next'
-    
+
     if msg == 'next':
-        main.moveSingleFile(obj['path'], obj['destination'])
+        track = main.moveSingleFile(obj['path'], obj['destination'])
+        if track == 0: 
+            main.removeSingleFile(obj['path'])
+        else:
+            main.removeUnfinishedFile(obj['path'], obj['destination'])
+            msg = 'stop'
     
     return json.dumps(msg)
 
 @app.route('/delete_file', methods=['POST'])
 def deleteFile():
-    obj = request.get_json()
-    main.removeSingleFile(obj['path'])    
+    obj = request.get_json() 
+    main.removeSingleFile(obj['path'])        
     return json.dumps(None)
 
 @app.route('/kill_transfer', methods=['GET'])

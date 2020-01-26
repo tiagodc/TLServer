@@ -138,7 +138,7 @@ def checkFlashDrive():
         return False
     
     disk = os.statvfs(disk)
-    space = disk.f_bfree * disk.f_bsize / 1000 / 1000 / 1000
+    space = disk.f_bfree * disk.f_bsize / 1024 / 1024 / 1024
     return space
 
 def flashSave(fullFileName, backGround = False):
@@ -245,10 +245,16 @@ def listDiskFiles(path = '.'):
 def moveSingleFile(filePath, outPath):
     mv = 'cp ' + filePath + ' ' + outPath
     mv = cmdMaker.makeCmd(mv)
-    os.system(mv)
+    return os.system(mv)
 
 def removeSingleFile(filePath):
     rm = 'rm ' + filePath
+    rm = cmdMaker.makeCmd(rm)
+    os.system(rm)
+
+def removeUnfinishedFile(filePath, outPath):
+    unfinished = re.sub('^pcaps/', outPath + '/', filePath)
+    rm = 'rm ' + unfinished
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 
@@ -277,9 +283,6 @@ def killTransfer():
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
-    cmd = 'killall -9 rm'
-    cmd = cmdMaker.makeCmd(cmd)
-    os.system(cmd)
 
 
 

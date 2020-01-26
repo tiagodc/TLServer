@@ -60,7 +60,8 @@
   </button>
 
   <div class="msg {{driveChecker.class}}">{{driveChecker.msg}}</div>
-  
+  <div *ngIf="driveChecker.trf_msg" class="msg {{driveChecker.class}}">{{driveChecker.trf_msg}}</div>
+
   <!-- <button class="btn downBtn" [disabled]="!getChecker.finished || saving" (click)="download()">
     <i *ngIf="getChecker.loading" class="fas fa-circle-notch fa-spin"></i>
     <span *ngIf="!getChecker.loading"> -->

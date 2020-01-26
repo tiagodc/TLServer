@@ -191,7 +191,7 @@ export class AppComponent {
       )}, 3000)
   }
 
-  driveChecker: any = {msg: '', class: '', available: false}
+  driveChecker: any = {msg: '', class: '', available: false, trf_msg: false}
   checkFlashDrive(){
 
     this.http.get('check_drive').subscribe(
@@ -258,6 +258,12 @@ export class AppComponent {
       this.transferInfo.total = 0;
       this.saving = false;
       this.clear();
+      
+      if(this.isFull || this.stopTransfer){
+        let j = i === 0 ? 0 : i-1;
+        this.driveChecker.trf_msg = j + ' de ' + this.files.length + ' arquivos transferidos.';  
+      }
+
       return;
     }
 
@@ -269,7 +275,7 @@ export class AppComponent {
     this.http.post(temp, 'transfer_file').subscribe(
       (x: any) => {
         this.isFull = x == 'full';
-        if(!this.isFull && !this.stopTransfer) this.http.post(temp, 'delete_file').subscribe(() => null, (error: any) => console.log(error));  
+
         return this.moveFile(i+1, dest);
       },
       (error: any) => {
@@ -345,7 +351,7 @@ export class AppComponent {
     setInterval(() =>{
       this.checkPcInfo()
       this.checkFlashDrive()
-    }, 10000);
+    }, 1000);
     
     // window.onbeforeunload = function(e){
     //   that.stopCapture();
