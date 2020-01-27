@@ -73,7 +73,7 @@ export class AppComponent {
       );
   }
 
-  getChecker: any = {loading: false, finished: false};
+  getChecker: any = {loading: false, finished: true};
   captureFile(){
 
     this.getChecker.finished = false;
@@ -153,7 +153,7 @@ export class AppComponent {
 
   clear(rename = false){
     // this.testChecker = {loading: false}
-    this.getChecker = {loading: false, finished: false};
+    this.getChecker = {loading: false, finished: true};
     this.startNow = 0;
 
     if(rename){

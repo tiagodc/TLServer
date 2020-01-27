@@ -243,18 +243,18 @@ def listDiskFiles(path = '.'):
     return dataFiles
 
 def moveSingleFile(filePath, outPath):
-    mv = 'cp ' + filePath + ' ' + outPath
+    mv = 'cp "{}" "{}"'.format(filePath, outPath)
     mv = cmdMaker.makeCmd(mv)
     return os.system(mv)
 
 def removeSingleFile(filePath):
-    rm = 'rm ' + filePath
+    rm = 'rm "{}"'.format(filePath)
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 
 def removeUnfinishedFile(filePath, outPath):
     unfinished = re.sub('^pcaps/', outPath + '/', filePath)
-    rm = 'rm ' + unfinished
+    rm = 'rm "{}"'.format(unfinished)
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 
@@ -285,5 +285,3 @@ def killTransfer():
 
 def getUntransferedFiles():
     return len(listPcaps())
-
-
