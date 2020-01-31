@@ -99,9 +99,11 @@ def getPcap(fileName):
     # exists = checkFileName(fileName + '.pcap')
     # if(exists and type(exists) is bool):
     #     return 'Name already taken.'
+    
+    fileName = fileName.encode('utf-8')    
+    device = getVlpDevice()    
 
-    device = getVlpDevice()
-    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w "pcaps/' + fileName.encode('utf-8') + '.pcap" &'
+    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w "pcaps/' + fileName + '.pcap" &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 

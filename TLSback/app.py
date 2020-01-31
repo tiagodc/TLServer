@@ -2,10 +2,13 @@ from flask import Flask, request, send_from_directory, render_template #import m
 import json, main, os, rosdefs
 from flask_cors import CORS
 from flask_socketio import SocketIO
+import datetime
 
 app = Flask(__name__) #create the Flask app
 CORS(app)
 socketio = SocketIO(app)
+
+today_date_string = datetime.datetime.today().strftime(r'%Y%m%d')
 
 @socketio.on('disconnect')
 def app_left():
@@ -26,9 +29,13 @@ def check():
 @app.route('/create', methods=['POST', 'GET'])
 def create():
     obj = request.get_json()
-    hasFile = main.getPcap(obj['name'])
+
+    global today_date_string
+    fileName = obj['name'] + '_' + today_date_string
+
+    hasFile = main.getPcap(fileName)
     if(type(hasFile) is int):
-        rosdefs.record(obj['name'])
+        rosdefs.record(fileName)
     return json.dumps(hasFile)
 
 @app.route('/dir', methods=['GET'])
@@ -39,7 +46,10 @@ def dir():
 @app.route('/monitor', methods=['POST', 'GET'])
 def monitor():
     obj = request.get_json()
-    fullName = 'pcaps/' + obj['name'] + '.pcap'
+
+    global today_date_string
+    fullName = 'pcaps/' + obj['name'] + '_' + today_date_string + '.pcap'
+    
     size = main.checkPcap(fullName)
     return json.dumps( size )
 
@@ -49,13 +59,13 @@ def kill():
     rosdefs.kill()
     return json.dumps(path)
 
-@app.route('/download/<path:filename>', methods=['GET','POST'])
-def download(filename):
-    path = os.getcwd() + '/pcaps'
-    if not os.path.exists(path) and not os.path.isdir(path):
-        os.mkdir(path)
-    # main.flashSave(filename)
-    return send_from_directory(path, filename)
+# @app.route('/download/<path:filename>', methods=['GET','POST'])
+# def download(filename):
+#     path = os.getcwd() + '/pcaps'
+#     if not os.path.exists(path) and not os.path.isdir(path):
+#         os.mkdir(path)
+#     # main.flashSave(filename)
+#     return send_from_directory(path, filename)
 
 # @app.route('/save', methods=['GET','POST'])
 # def save():
@@ -129,7 +139,13 @@ def makeDir():
 @app.route('/check_file', methods=['POST'])
 def checkFile():
     obj = request.get_json()
-    path = 'pcaps/' + obj['name'] + '.pcap'
+
+    global today_date_string
+    today_date_string = datetime.datetime.today().strftime(r'%Y%m%d')
+
+    fileName = obj['name'] + '_' + today_date_string
+
+    path = 'pcaps/' + fileName + '.pcap'
     exists = main.checkFileOnDisk(path)
     return json.dumps(exists)
 
