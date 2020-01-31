@@ -18,6 +18,7 @@ A *BackPack ForLiDAR* é uma plataforma portátil para coleta de dados LiDAR em 
 9. (interno) Extensão USB 3.0
 
 ![Figura 1](tutorial_imgs/parts.png)
+
 Figura 1. Visão geral da *BackPack ForLiDAR*.
 
 ### Antes de usar
