@@ -61,7 +61,7 @@ class monitor:
 
 
 def checkPcap(fullFileName, erase=False):
-    fullFileName = fullFileName.encode('utf-8')
+    fullFileName = fullFileName.encode('utf-8').decode('utf-8')
 
     sz1 = os.path.getsize( fullFileName )    
     time.sleep(2)
@@ -100,7 +100,7 @@ def getPcap(fileName):
     # if(exists and type(exists) is bool):
     #     return 'Name already taken.'
     
-    fileName = fileName.encode('utf-8')    
+    fileName = fileName.encode('utf-8').decode('utf-8')  
     device = getVlpDevice()    
 
     cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w "pcaps/' + fileName + '.pcap" &'
@@ -132,7 +132,7 @@ def getFlashPath():
         isSys = re.match(r'settings\d*', i, re.IGNORECASE)
         if isSys == None:
             flashPath = '/media/' + userName + '/' + i + '/'
-            return flashPath.encode('utf-8')
+            return flashPath.encode('utf-8').decode('utf-8')
 
     return False
 
@@ -228,7 +228,7 @@ def moveFiles(inDir, outDir, nameDir='bp_forlidar'):
 
 def checkFileOnDisk(filePath):
     
-    return os.path.exists( filePath.encode('utf-8') )
+    return os.path.exists( filePath.encode('utf-8').decode('utf-8') )
 
 def listDiskFiles(path = '.'):
     
@@ -241,25 +241,25 @@ def listDiskFiles(path = '.'):
 
         if isBag is not None or isPcap is not None:
             fullPath = path + '/' + i
-            fullPath = fullPath.encode('utf-8')
+            fullPath = fullPath.encode('utf-8').decode('utf-8')
             size = os.path.getsize(fullPath) / 1000000
             dataFiles.append({'path': fullPath, 'size': size})
     
     return dataFiles
 
 def moveSingleFile(filePath, outPath):
-    mv = 'cp "{}" "{}"'.format(filePath, outPath).encode('utf-8')
+    mv = 'cp "{}" "{}"'.format(filePath, outPath).encode('utf-8').decode('utf-8')
     mv = cmdMaker.makeCmd(mv)
     return os.system(mv)
 
 def removeSingleFile(filePath):
-    rm = 'rm "{}"'.format(filePath).encode('utf-8')
+    rm = 'rm "{}"'.format(filePath).encode('utf-8').decode('utf-8')
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 
 def removeUnfinishedFile(filePath, outPath):
     unfinished = re.sub('^pcaps/', outPath + '/', filePath)
-    rm = 'rm "{}"'.format(unfinished).encode('utf-8')
+    rm = 'rm "{}"'.format(unfinished).encode('utf-8').decode('utf-8')
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 

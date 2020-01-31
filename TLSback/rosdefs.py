@@ -13,5 +13,5 @@ def kill():
             os.system(cmd)
 
 def record(fileName):
-    cmd = r'rosbag record -O "pcaps/' + fileName.encode('utf-8') + r'.bag" /velodyne_points /imu_data /ekf_quat /ekf_euler /diagnostics /mag /gps_dump &'
+    cmd = r'rosbag record -O "pcaps/' + fileName.encode('utf-8').decode('utf-8') + r'.bag" /velodyne_points /imu_data /ekf_quat /ekf_euler /diagnostics /mag /gps_dump &'
     os.system(cmd)
