@@ -83,7 +83,7 @@ def getVlpDevice():
     device = ''
     for i in devs:
         # isVlp = re.match(r'.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
-        isVlp = re.match(r'.*encap:Ethernet.*', i, re.MULTILINE|re.DOTALL)
+        isVlp = re.match(r'.*encap:Ethernet.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
         if isVlp is not None:
             device = i
             break
