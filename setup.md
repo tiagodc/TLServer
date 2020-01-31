@@ -117,6 +117,13 @@ Reinicie o `apache`
 sudo service apache2 restart
 ```
 
+#### Periféricos exFAT
+
+Instale os pacotes que permitem manipulação de flash drives em formato exFAT
+```
+sudo apt install exfat-fuse exfat-utils
+```
+
 #### Software do aplicativo
 
 Clone o repositório do aplicativo
