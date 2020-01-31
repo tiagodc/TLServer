@@ -17,7 +17,8 @@ A *BackPack ForLiDAR* é uma plataforma portátil para coleta de dados LiDAR em 
 8. (interno) Interface de conexão VLP-16 + Garmin 18x
 9. (interno) Extensão USB 3.0
 
-[Figura 1. Visão geral da *BackPack ForLiDAR*.](tutorial_imgs/parts.png)
+![Figura 1](tutorial_imgs/parts.png)
+Figura 1. Visão geral da *BackPack ForLiDAR*.
 
 ### Antes de usar
 
