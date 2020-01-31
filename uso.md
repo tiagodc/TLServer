@@ -1,7 +1,6 @@
 ## Manual de uso *BackPack Forlidar 2.0*
 
-#### Tiago de Conto
-#### 31 de Janeiro de 2020
+#### Tiago de Conto, 31 de Janeiro de 2020
 
 ### Visão geral do sistema
 
@@ -27,6 +26,8 @@ Mantenha as baterias sempre fora da mochila quando não estiver usando o equipam
 
 Uma bateria cheia garante o uso contínuo da mochila por cerca de 2 horas. Recomenda-se o transporte do equipamento *desligado*, ligando-o apenas no local a ser escaneado e desligando-o logo após o escaneamento, com os sensores externos devidamente guardados dentro dos compartimentos da mochila, a fim de evitar choques, riscos e danos por contato externo. Para escaneamentos intermitentes em locais próximos, onde o deslocamento for de poucos minutos, o equipamento pode ser transportado ainda ligado e montado.
 
+![Figura 2](tutorial_imgs/bateria.png)
+
 Figura 2. Acondicionamento das baterias.
 
 ### Preparando o sistema
@@ -38,6 +39,8 @@ Figura 2. Acondicionamento das baterias.
 5. Aperte o botão no topo do monitor de voltagem até chegar em "3.20".
 6. Feche a mochila, ajuste as alças, regule a altura da barra telescópica e a rotação do encaixe do sensor LiDAR para a posição desejada.
 
+![Figura 3](tutorial_imgs/montagem.png)
+
 Figura 3. Etapas no preparo do equipamento.
 
 ### Utilização do equipamento
@@ -47,10 +50,12 @@ Figura 3. Etapas no preparo do equipamento.
 1. Aperte o botão circular na lateral do mochila para ligar os sensores, ativando a transmissão de corrente da bateria.
 2. Espere de 10 a 20 segundos.
 3. Clique no botão retangular, logo acima do botão circular, para ligar o Micro computador e ativar a transmissão dos dados dos sensores.
-7. Vista a mochila e garanta que a mesma esteja presa firmemente ao operador.
-4. Espere de 10 a 20 segundos até a abertura de rede WiFi **ForLiDAR**.
-5. Utilize qualquer aparelho com conexão *wireless* (smartphone, tablet, laptop etc.), deslique a conexão de dados do aparelho e o conecte via WiFi à rede ForLiDAR - senha de acesso: *forlidar*
-6. Abra o navegador de internet e digite *10.10.10.10* na barra de endereços para acesso ao *app* de controle da mochila.
+4. Vista a mochila e garanta que a mesma esteja presa firmemente ao operador.
+5. Espere de 10 a 20 segundos até a abertura de rede WiFi **ForLiDAR**.
+6. Utilize qualquer aparelho com conexão *wireless* (smartphone, tablet, laptop etc.), deslique a conexão de dados do aparelho e o conecte via WiFi à rede ForLiDAR - senha de acesso: *forlidar*
+7. Abra o navegador de internet e digite *10.10.10.10* na barra de endereços para acesso ao *app* de controle da mochila.
+
+![Figura 4](tutorial_imgs/liga.png)
 
 Figura 4. Ligando a mochila.
 
@@ -68,6 +73,8 @@ O aplicativo web consiste em uma tela única de controle da coleta de dados. As 
 8. Monitoramento do disco externo.
 9. Botão para limpar a tela do app - equivalente ao *refresh* do browser.
 10. Botão para desligar o micro computador de bordo.
+
+![Figura 5](tutorial_imgs/telas.png)
 
 Figura 5. Visão geral do aplicativo web de controle da mochila.
 
