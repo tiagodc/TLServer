@@ -57,11 +57,11 @@ def download(filename):
     # main.flashSave(filename)
     return send_from_directory(path, filename)
 
-@app.route('/save', methods=['GET','POST'])
-def save():
-    obj = request.get_json()
-    fileName = obj['name']
-    return json.dumps( main.flashSave(fileName + '.*') )
+# @app.route('/save', methods=['GET','POST'])
+# def save():
+#     obj = request.get_json()
+#     fileName = obj['name']
+#     return json.dumps( main.flashSave(fileName + '.*') )
 
 @app.route('/check_drive', methods=['GET'])
 def checkDrive():
@@ -123,7 +123,8 @@ def makeDir():
     folder = 'pcaps'
     if not os.path.exists(folder) or not os.path.isdir(folder):
         os.mkdir(folder)
-    return json.dumps(0)
+        return json.dumps(True)
+    return json.dumps(False)
 
 @app.route('/check_file', methods=['POST'])
 def checkFile():

@@ -61,14 +61,15 @@ class monitor:
 
 
 def checkPcap(fullFileName, erase=False):
-    sz1 = os.path.getsize( fullFileName )
-    
+    fullFileName = fullFileName.encode('utf-8')
+
+    sz1 = os.path.getsize( fullFileName )    
     time.sleep(2)
     sz2 = os.path.getsize( fullFileName )
 
     if(sz2 == sz1):
         cmd = 'kill -9 $(pidof tcpdump)'
-        if(erase): cmd +=  ' && rm --interactive=never ' + fullFileName
+        if(erase): cmd +=  ' && rm --interactive=never "' + fullFileName + '"'
         cmd = cmdMaker.makeCmd(cmd)
         os.system( cmd )
         return False
@@ -100,7 +101,7 @@ def getPcap(fileName):
     #     return 'Name already taken.'
 
     device = getVlpDevice()
-    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w pcaps/' + fileName + '.pcap &'
+    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w "pcaps/' + fileName.encode('utf-8') + '.pcap" &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
@@ -129,7 +130,8 @@ def getFlashPath():
         isSys = re.match(r'settings\d*', i, re.IGNORECASE)
         if isSys == None:
             flashPath = '/media/' + userName + '/' + i + '/'
-            return flashPath
+            return flashPath.encode('utf-8')
+
     return False
 
 def checkFlashDrive():
@@ -141,22 +143,22 @@ def checkFlashDrive():
     space = disk.f_bfree * disk.f_bsize / 1024 / 1024 / 1024
     return space
 
-def flashSave(fullFileName, backGround = False):
-    check = checkFlashDrive()
-    if not(check):
-        return False
+# def flashSave(fullFileName, backGround = False):
+#     check = checkFlashDrive()
+#     if not(check):
+#         return False
 
-    flashPath = getFlashPath()
-    cmd = 'mkdir ' + flashPath + 'pcaps -p'
-    cmd = cmdMaker.makeCmd(cmd)
-    os.system(cmd)
+#     flashPath = getFlashPath()
+#     cmd = 'mkdir ' + flashPath + 'pcaps -p'
+#     cmd = cmdMaker.makeCmd(cmd)
+#     os.system(cmd)
 
-    cmd = 'mv pcaps/' + fullFileName + ' ' + flashPath + 'pcaps/' #+ fullFileName
-    if(backGround): cmd += ' &'
-    cmd = cmdMaker.makeCmd(cmd)
-    os.system(cmd)
+#     cmd = 'mv pcaps/' + fullFileName + ' ' + flashPath + 'pcaps/' #+ fullFileName
+#     if(backGround): cmd += ' &'
+#     cmd = cmdMaker.makeCmd(cmd)
+#     os.system(cmd)
 
-    return checkFlashDrive()
+#     return checkFlashDrive()
 
 # def checkFileName(fullFileName):
 #     drive = checkFlashDrive()
@@ -224,7 +226,7 @@ def moveFiles(inDir, outDir, nameDir='bp_forlidar'):
 
 def checkFileOnDisk(filePath):
     
-    return os.path.exists(filePath)
+    return os.path.exists( filePath.encode('utf-8') )
 
 def listDiskFiles(path = '.'):
     
@@ -237,24 +239,25 @@ def listDiskFiles(path = '.'):
 
         if isBag is not None or isPcap is not None:
             fullPath = path + '/' + i
+            fullPath = fullPath.encode('utf-8')
             size = os.path.getsize(fullPath) / 1000000
             dataFiles.append({'path': fullPath, 'size': size})
     
     return dataFiles
 
 def moveSingleFile(filePath, outPath):
-    mv = 'cp "{}" "{}"'.format(filePath, outPath)
+    mv = 'cp "{}" "{}"'.format(filePath, outPath).encode('utf-8')
     mv = cmdMaker.makeCmd(mv)
     return os.system(mv)
 
 def removeSingleFile(filePath):
-    rm = 'rm "{}"'.format(filePath)
+    rm = 'rm "{}"'.format(filePath).encode('utf-8')
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 
 def removeUnfinishedFile(filePath, outPath):
     unfinished = re.sub('^pcaps/', outPath + '/', filePath)
-    rm = 'rm "{}"'.format(unfinished)
+    rm = 'rm "{}"'.format(unfinished).encode('utf-8')
     rm = cmdMaker.makeCmd(rm)
     os.system(rm)
 

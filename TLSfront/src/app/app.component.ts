@@ -1,8 +1,6 @@
 import { Component /*, Inject*/ } from '@angular/core';
 // import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { HttpService } from './http.service';
-import { post } from 'selenium-webdriver/http';
-
 
 @Component({
   selector: 'app-root',
@@ -14,7 +12,7 @@ export class AppComponent {
   constructor(private http: HttpService/*, public dialog: MatDialog*/){ }
   
   fileName = '';
-  fileLink = "";
+  // fileLink = "";
   counter: any;
   startNow: any;
   space: any;
@@ -118,7 +116,7 @@ export class AppComponent {
     
     this.http.get('kill').subscribe(
       data => {        
-        this.fileLink = this.http.serverAddress + 'download/' + this.fileName + '.pcap';
+        // this.fileLink = this.http.serverAddress + 'download/' + this.fileName + '.pcap';
 
         if(block){
           this.getChecker.finished = true;
@@ -135,21 +133,21 @@ export class AppComponent {
     );
   }
 
-  save(){
-    this.saving = true;
-    this.http.post({name: this.fileName}, 'save').subscribe( (back: any) => {
-        this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB livres' : '';
-        this.clear();
-        this.saving = false;
-      })
-  }
+  // save(){
+  //   this.saving = true;
+  //   this.http.post({name: this.fileName}, 'save').subscribe( (back: any) => {
+  //       this.driveChecker.msg = (typeof back === 'number') ? back.toFixed(2) + ' GB livres' : '';
+  //       this.clear();
+  //       this.saving = false;
+  //     })
+  // }
 
-  download(){
-    // this.fileLink = this.serverAddress + 'download/' + this.fileName + '.pcap';
-    window.location.href = this.fileLink;
-    if(this.driveChecker.available) this.save();
-    // this.clear();
-  }
+  // download(){
+  //   // this.fileLink = this.serverAddress + 'download/' + this.fileName + '.pcap';
+  //   window.location.href = this.fileLink;
+  //   if(this.driveChecker.available) this.save();
+  //   // this.clear();
+  // }
 
   clear(rename = false){
     // this.testChecker = {loading: false}
@@ -158,7 +156,7 @@ export class AppComponent {
 
     if(rename){
       this.fileName = '';
-      this.fileLink = "";
+      // this.fileLink = "";
       window.location.reload(true);
     }
   }
@@ -356,15 +354,6 @@ export class AppComponent {
       this.checkFlashDrive()
     }, 1000);
     
-    // window.onbeforeunload = function(e){
-    //   that.stopCapture();
-    // }
-
-    // window.addEventListener("beforeunload", function (event) {
-    //   that.stopCapture(false);
-    //   // event.returnValue = "browsing away...";
-    // });
-
     window.addEventListener('beforeunload', (e) => {            
       this.stopCapture(false);
       this.cancelTransfer(); 
@@ -373,7 +362,12 @@ export class AppComponent {
     this.stopCapture(false);
     this.cancelTransfer(); 
 
-    this.http.get('make_dir').subscribe();
+    this.http.get('make_dir').subscribe(x => { 
+      console.log(x ? 'created' : 'exists') 
+    }, err => {
+      console.log('failed to make_dir');
+      this.clear(true);
+    });
   }
 
 }
