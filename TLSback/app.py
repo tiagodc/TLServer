@@ -1,5 +1,5 @@
 from flask import Flask, request, send_from_directory, render_template #import main Flask class and request object
-import json, main, os, rosdefs
+import json, main, os, rosdefs, sys
 from flask_cors import CORS
 from flask_socketio import SocketIO
 import datetime
@@ -159,5 +159,6 @@ def sensor_monitor():
     return json.dumps(obj)
 
 if __name__ == '__main__':
+    # os.environ['LIDAR_SENSOR'] = sys.argv[1]
     socketio.run(app, host='0.0.0.0', port=5001, debug=False)
     # app.run(port=5001, host='0.0.0.0', debug=False)
