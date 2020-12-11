@@ -1,4 +1,4 @@
-timeout 5 nmcli c up ForLiDAR
+nmcli c up ForLiDAR
 timeout 3 nmcli c up Ouster-OS1
 
 OS1ID="os1-122021000143.local"
