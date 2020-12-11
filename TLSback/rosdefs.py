@@ -19,7 +19,7 @@ def record(fileName):
         # topics = "/velodyne_points /imu_data /ekf_quat /ekf_euler /diagnostics /mag /gps_dump"
         topics = "/velodyne_points /gps_dump"
     elif getSensor() == 'OS1':
-        topics = "/os1_cloud_node/points /os1_cloud_node/imu"   
+        topics = "-a"#"/os1_cloud_node/points /os1_cloud_node/imu"   
         
     cmd = r'rosbag record --bz2 -O "pcaps/' + fileName.encode('utf-8').decode('utf-8') + r'.bag" ' + topics + ' &'
     os.system(cmd)
