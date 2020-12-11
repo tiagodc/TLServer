@@ -5,6 +5,7 @@
 
 sleep 3
 
+nmcli c up ForLiDAR
 export LIDAR_SENSOR=$(./which_sensor.sh | tail -n 1)
 
 source /opt/ros/kinetic/setup.bash
