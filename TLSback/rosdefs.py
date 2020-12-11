@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os, re, subprocess as sp
+from main import getSensor
 
 def kill():
     nodes = sp.run(['rosnode','list'], stdout=sp.PIPE)
@@ -13,5 +14,12 @@ def kill():
             os.system(cmd)
 
 def record(fileName):
-    cmd = r'rosbag record -O "pcaps/' + fileName.encode('utf-8').decode('utf-8') + r'.bag" /velodyne_points /imu_data /ekf_quat /ekf_euler /diagnostics /mag /gps_dump &'
+    topics = ''
+    if getSensor() == 'VLP16':
+        # topics = "/velodyne_points /imu_data /ekf_quat /ekf_euler /diagnostics /mag /gps_dump"
+        topics = "/velodyne_points /gps_dump"
+    elif getSensor() == 'OS1':
+        topics = "/os1_cloud_node/points /os1_cloud_node/imu"   
+        
+    cmd = r'rosbag record --bz2 -O "pcaps/' + fileName.encode('utf-8').decode('utf-8') + r'.bag" ' + topics + ' &'
     os.system(cmd)

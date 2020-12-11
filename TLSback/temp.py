@@ -1,5 +1,7 @@
 import os, sys, time, re, subprocess as sp
 
+os.environ.get('ROS_DISTRO')
+
 class bashInfo:
     sudoPass = ''
     workDir = '.'
@@ -24,7 +26,7 @@ class bashInfo:
 cmdMaker = bashInfo()
 cmdMaker.setPass('forlidar')
 
-def getVlpDevice():
+def getLidarDevice():
     devs = sp.run(['ifconfig'], stdout=sp.PIPE)
     devs = devs.stdout.decode('utf-8').split('\n\n')
 
@@ -42,7 +44,7 @@ def getVlpDevice():
     device = '-i ' + device.split(' ')[0]
     return device
 
-device = getVlpDevice()
+device = getLidarDevice()
 cmd = 'timeout 3 tcpdump ' + device + ' src 192.168.1.201 and port 8308'
 cmd = cmdMaker.makeCmd(cmd)
 

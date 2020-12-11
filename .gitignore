@@ -4,3 +4,6 @@ TLSback/catkin_gps/build/
 TLSback/catkin_gps/devel/
 TLSback/catkin_gps/install/
 TLSback/catkin_gps/src/CMakeLists.txt
+TLSback/catkin_os1/build/
+TLSback/catkin_os1/devel/
+TLSback/catkin_os1/src/CMakeLists.txt

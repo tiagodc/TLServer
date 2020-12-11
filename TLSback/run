@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # echo forlidar | sudo -S ifconfig enp3s0 192.168.1.70 netmask 255.255.255.0
+# echo forlidar | sudo -S ifconfig enp3s0 10.5.5.1 netmask 255.255.255.0
 
 sleep 3
 
-export SENSOR=$(./which_sensor.sh | tail -n 1)
+export LIDAR_SENSOR=$(./which_sensor.sh | tail -n 1)
 
 source /opt/ros/kinetic/setup.bash
 
 roscore &
 
-if [[ "$SENSOR" == "OS1" ]]; then
-    # roslaunch path/to/os1_ros/os1.launch & 
-    echo "ouster"
+if [[ "$LIDAR_SENSOR" == "OS1" ]]; then
+    sleep 3 && source /home/forlidar/Desktop/TLServer/TLSback/catkin_os1/devel/setup.bash && roslaunch /home/forlidar/Desktop/TLServer/TLSback/catkin_os1/src/ouster_example/ouster_ros/os1.launch &
 else
-    sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
+    # sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
     sleep 3 && roslaunch velodyne_pointcloud VLP16_points.launch &
     sleep 3 && source /home/forlidar/Desktop/TLServer/TLSback/catkin_gps/devel/setup.bash && rosrun gps_listener listenerGPS.py &
 fi

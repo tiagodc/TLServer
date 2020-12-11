@@ -1,0 +1,2 @@
+- TLSback >> main.py >> getLidarDevice() regular expressions
+- force connection to forlidar network

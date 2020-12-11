@@ -15,6 +15,10 @@ def app_left():
     main.stopPcap()
     print('left...')
 
+@app.route('/sensor', methods=['GET'])
+def which_sensor():
+    return json.dumps(main.getSensor())
+
 @app.route('/check', methods=['GET'])
 def check():
     testName = '__pcap__'
@@ -58,20 +62,6 @@ def kill():
     path = main.stopPcap()
     rosdefs.kill()
     return json.dumps(path)
-
-# @app.route('/download/<path:filename>', methods=['GET','POST'])
-# def download(filename):
-#     path = os.getcwd() + '/pcaps'
-#     if not os.path.exists(path) and not os.path.isdir(path):
-#         os.mkdir(path)
-#     # main.flashSave(filename)
-#     return send_from_directory(path, filename)
-
-# @app.route('/save', methods=['GET','POST'])
-# def save():
-#     obj = request.get_json()
-#     fileName = obj['name']
-#     return json.dumps( main.flashSave(fileName + '.*') )
 
 @app.route('/check_drive', methods=['GET'])
 def checkDrive():

@@ -27,11 +27,16 @@ cmdMaker = bashInfo()
 cmdMaker.setPass('forlidar')
 # cmdMaker.setwd('/home/tiago/Desktop/TLServer/')
 
+def getSensor():
+    return os.environ.get('LIDAR_SENSOR')
+
 class monitor:
     timeout = 3
 
     def gps(self):
-        device = getVlpDevice()
+        if getSensor() == 'OS1':
+            return 0
+        device = getLidarDevice()
         cmd = self.timeout + 'tcpdump ' + device + ' src 192.168.1.201 and port 8308'
         cmd = cmdMaker.makeCmd(cmd)
         out = sp.run(cmd, shell=True, stdout=sp.PIPE)
@@ -39,17 +44,32 @@ class monitor:
         return len(out)
     
     def imu(self):
-        cmd = self.timeout + 'rostopic echo /imu_data'
+        if getSensor() == 'VLP16':
+            topic = '/imu_data'
+            return 0
+        elif getSensor() == 'OS1':
+            topic = '/os1_cloud_node/imu'
+
+        cmd = self.timeout + 'rostopic echo ' + topic
         out = sp.run(cmd, shell=True, stdout=sp.PIPE)
         out = str(out.stdout)
         return len(out)
 
     def laser(self, ros=False):
+        if getSensor() == 'VLP16':
+            topic = '/velodyne_points'
+            ip = '192.168.1.201'
+            port = '2368'
+        elif getSensor() == 'OS1':
+            topic = '/os1_cloud_node/points'
+            ip = 'os1-122021000143.local'
+            port = '10001'
+
         if ros:
-            cmd = self.timeout + 'rostopic echo /velodyne_points'
+            cmd = self.timeout + 'rostopic echo ' + topic
         else:
-            device = getVlpDevice()
-            cmd = self.timeout + 'tcpdump ' + device + ' src 192.168.1.201 and port 2368'
+            device = getLidarDevice()
+            cmd = self.timeout + 'tcpdump ' + device + ' src ' + ip + ' and port ' + port
             cmd = cmdMaker.makeCmd(cmd)
 
         out = sp.run(cmd, shell=True, stdout=sp.PIPE)
@@ -58,7 +78,6 @@ class monitor:
     
     def __init__(self, tm=3):
         self.timeout = 'timeout ' + str(tm) + ' '
-
 
 def checkPcap(fullFileName, erase=False):
     fullFileName = fullFileName.encode('utf-8').decode('utf-8')
@@ -76,15 +95,15 @@ def checkPcap(fullFileName, erase=False):
     else:
         return sz2
 
-def getVlpDevice():
+def getLidarDevice():
     devs = sp.run(['ifconfig'], stdout=sp.PIPE)
-    devs = devs.stdout.decode('utf-8').split('\n\n')
+    devs = devs.stdout.decode('utf-8').split('\n\n')   
 
     device = ''
     for i in devs:
-        # isVlp = re.match(r'.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
         isVlp = re.match(r'.*encap:Ethernet.*addr:192\.168\.1\.70.*', i, re.MULTILINE|re.DOTALL)
-        if isVlp is not None:
+        isOs1 = re.match(r'.*encap:Ethernet.*addr:10\.5\.5\.1.*', i, re.MULTILINE|re.DOTALL)
+        if isVlp is not None or isOs1 is not None:
             device = i
             break
     
@@ -96,14 +115,19 @@ def getVlpDevice():
 
 def getPcap(fileName):
 
-    # exists = checkFileName(fileName + '.pcap')
-    # if(exists and type(exists) is bool):
-    #     return 'Name already taken.'
+    if getSensor() == 'VLP16':
+        ip = '192.168.1.201'
+        port1 = '2368'
+        port2 = '8308'
+    elif getSensor() == 'OS1':
+        ip = 'os1-122021000143.local'
+        port1 = '10001'
+        port2 = '10002'
     
     fileName = fileName.encode('utf-8').decode('utf-8')  
-    device = getVlpDevice()    
+    device = getLidarDevice()    
 
-    cmd = 'tcpdump ' + device + ' src 192.168.1.201 and port 2368 or port 8308 -w "pcaps/' + fileName + '.pcap" &'
+    cmd = 'tcpdump ' + device + f' src {ip} and port {port1} or port {port2} -w "pcaps/' + fileName + '.pcap" &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
