@@ -1,24 +1,22 @@
 #!/bin/bash
 
+# echo forlidar | sudo -S ifconfig enp3s0 192.168.1.70 netmask 255.255.255.0
+
 sleep 3
 
-# echo forlidar | sudo -S ifconfig enp3s0 192.168.1.70 netmask 255.255.255.0
+export SENSOR=$(./which_sensor.sh | tail -n 1)
 
 source /opt/ros/kinetic/setup.bash
 
 roscore &
 
-sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
-
-sleep 3 && roslaunch velodyne_pointcloud VLP16_points.launch &
-
-sleep 3 && source /home/forlidar/Desktop/TLServer/TLSback/catkin_gps/devel/setup.bash && rosrun gps_listener listenerGPS.py &
+if [[ "$SENSOR" == "OS1" ]]; then
+    # roslaunch path/to/os1_ros/os1.launch & 
+    echo "ouster"
+else
+    sleep 3 && roslaunch sbg_driver sbg_ellipseA.launch &
+    sleep 3 && roslaunch velodyne_pointcloud VLP16_points.launch &
+    sleep 3 && source /home/forlidar/Desktop/TLServer/TLSback/catkin_gps/devel/setup.bash && rosrun gps_listener listenerGPS.py &
+fi
 
 sleep 5 && cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py &
-
-# echo ubuntu | sudo -S ifconfig enp 192.168.1.70 netmask 255.255.255.0
-# source /opt/ros/lunar/setup.bash && roscore &
-# source /opt/ros/lunar/setup.bash && sleep 5 && roslaunch sbg_driver sbg_ellipseA.launch &
-# sleep 5 && source /home/tiago/catkin_vlp/devel/setup.bash && roslaunch velodyne_pointcloud VLP16_points.launch &
-# source /opt/ros/lunar/setup.bash && cd /home/tiago/Desktop/TLServer/TLSback && python3 app.py &
-
