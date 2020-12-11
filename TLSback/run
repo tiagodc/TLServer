@@ -20,4 +20,4 @@ else
     sleep 3 && source /home/forlidar/Desktop/TLServer/TLSback/catkin_gps/devel/setup.bash && rosrun gps_listener listenerGPS.py &
 fi
 
-sleep 5 && cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py &
+sleep 5 && cd /home/forlidar/Desktop/TLServer/TLSback && source /opt/ros/kinetic/setup.bash && python3 app.py

@@ -127,7 +127,7 @@ def getPcap(fileName):
     fileName = fileName.encode('utf-8').decode('utf-8')  
     device = getLidarDevice()    
 
-    cmd = 'tcpdump ' + device + f' src {ip} and port {port1} or port {port2} -w "pcaps/' + fileName + '.pcap" &'
+    cmd = 'tcpdump ' + device + ' src {} and port {} or port {} -w "pcaps/'.format(ip,port1,port2) + fileName + '.pcap" &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
