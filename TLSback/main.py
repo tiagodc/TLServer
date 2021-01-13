@@ -119,15 +119,17 @@ def getPcap(fileName):
         ip = '192.168.1.201'
         port1 = '2368'
         port2 = '8308'
+        port_cmd = 'and port {} or port {}'.format(port1, port2)
     elif getSensor() == 'OS1':
         ip = 'os1-122021000143.local'
         port1 = '10001'
         port2 = '10002'
+        port_cmd = ''
     
     fileName = fileName.encode('utf-8').decode('utf-8')  
     device = getLidarDevice()    
 
-    cmd = 'tcpdump ' + device + ' src {} and port {} or port {} -w "pcaps/'.format(ip,port1,port2) + fileName + '.pcap" &'
+    cmd = 'tcpdump ' + device + ' src {} {} -w "pcaps/'.format(ip,port_cmd) + fileName + '.pcap" &'
     cmd = cmdMaker.makeCmd(cmd)
     os.system(cmd)
 
